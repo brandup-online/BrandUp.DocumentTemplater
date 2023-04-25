@@ -12,41 +12,40 @@ namespace BrandUp.DocxGenerator
         readonly static Regex commandRegex = new(@"\{(?<command>\w+)\((?<params>.*)\)\}");
         readonly static OpenXmlHelper openXmlHelper = new("http://schemas.WordDocumentGenerator.com/DocumentGeneration");
 
-        public static Stream GenerateDocument(object dataContext, Stream templateFile)
+        public static Stream GenerateDocument(object dataContext, byte[] templateBytes)
         {
             if (dataContext == null)
                 throw new ArgumentNullException(nameof(dataContext));
-            if (templateFile == null)
-                throw new ArgumentNullException(nameof(templateFile));
+            if (templateBytes == null)
+                throw new ArgumentNullException(nameof(templateBytes));
 
-
-            using var wordDocument = WordprocessingDocument.Open(templateFile, true);
-
-            wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
-            MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
-            Document document = mainDocumentPart.Document;
-
-            foreach (HeaderPart part in mainDocumentPart.HeaderParts)
+            using var templateFile = new MemoryStream(templateBytes);
+            using (var wordDocument = WordprocessingDocument.Open(templateFile, true))
             {
-                ProcessPlaceholder(new OpenXmlElementDataContext(part.Header, dataContext));
-                part.Header.Save();
+                wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
+                MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
+                Document document = mainDocumentPart.Document;
+
+                foreach (HeaderPart part in mainDocumentPart.HeaderParts)
+                {
+                    ProcessPlaceholder(new OpenXmlElementDataContext(part.Header, dataContext));
+                    part.Header.Save();
+                }
+
+                foreach (FooterPart part in mainDocumentPart.FooterParts)
+                {
+                    ProcessPlaceholder(new OpenXmlElementDataContext(part.Footer, dataContext));
+                    part.Footer.Save();
+                }
+
+                ProcessPlaceholder(new OpenXmlElementDataContext(document, dataContext));
+                openXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
+                document.Save();
             }
 
-            foreach (FooterPart part in mainDocumentPart.FooterParts)
-            {
-                ProcessPlaceholder(new OpenXmlElementDataContext(part.Footer, dataContext));
-                part.Footer.Save();
-            }
-
-            ProcessPlaceholder(new OpenXmlElementDataContext(document, dataContext));
-
-            openXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
-
-            document.Save();
             var output = new MemoryStream();
-
-            templateFile.Seek(0, SeekOrigin.Begin);
-            templateFile.CopyTo(output);
+            templateFile.WriteTo(output);
+            output.Seek(0, SeekOrigin.Begin);
 
             return output;
         }
@@ -116,7 +115,8 @@ namespace BrandUp.DocxGenerator
 
                         object value = null;
 
-                        if (t.IsAssignableFrom(typeof(IDictionary<,>)))
+                        bool isDict = t.GetInterfaces().Any(it => it.IsGenericType && it.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+                        if (isDict)
                             value = ((IDictionary<string, object>)dataContext)[propName];
                         else
                         {
@@ -137,8 +137,7 @@ namespace BrandUp.DocxGenerator
                             }
                         }
 
-                        dataContext = value;
-                        return new(commandName, properties, dataContext)
+                        return new(commandName, properties, value)
                         {
                             OutputType = DocumentGeneratorCommandOutputType.None
                         };
@@ -183,8 +182,11 @@ namespace BrandUp.DocxGenerator
                         string output = null;
                         object value = null;
 
-                        if (t.IsAssignableFrom(typeof(IDictionary<,>)))
+                        bool isDict = t.GetInterfaces().Any(it => it.IsGenericType && it.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+                        if (isDict)
+                        {
                             value = ((IDictionary<string, object>)dataContext)[propName];
+                        }
                         else
                         {
                             try
