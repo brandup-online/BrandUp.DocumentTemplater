@@ -69,30 +69,7 @@
                 if (properties.Count > 1 && !string.IsNullOrEmpty(properties[1]))
                 {
                     var format = properties[1];
-
-                    if (value is DateTime time)
-                        output = time.ToString(format);
-                    else if (value is TimeSpan span)
-                        output = span.ToString(format);
-                    else if (value is decimal @decimal)
-                        output = @decimal.ToString(format);
-                    else if (value is double @double)
-                        output = @double.ToString(format);
-                    else if (value is float single)
-                        output = single.ToString(format);
-                    else if (value is int @int)
-                        output = @int.ToString(format);
-                    else if (value is bool boolean)
-                    {
-                        if (format == "b")
-                            output = boolean ? "да" : "нет";
-                        else if (format == "B")
-                            output = boolean ? "Да" : "Нет";
-                        else
-                            output = value.ToString();
-                    }
-                    else
-                        output = string.Format(format, value);
+                    output = value.ToString(format);
                 }
                 else
                     output = value.ToString();

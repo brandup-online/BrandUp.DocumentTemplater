@@ -16,7 +16,9 @@ namespace BrandUp.DocxGenerator
                     new() { Name = "Toys", Price = 10, Note = "Round" }
                 }
             };
-            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test, CancellationToken.None);
+
+            using var template = new MemoryStream(Properties.Resources.test);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, template, CancellationToken.None);
 
             using var output = File.Create("Success_TestObject.docx");
             resultData.CopyTo(output);
@@ -35,7 +37,9 @@ namespace BrandUp.DocxGenerator
                         }
                 }
             };
-            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test, CancellationToken.None);
+
+            using var template = new MemoryStream(Properties.Resources.test);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, template, CancellationToken.None);
 
             using var output = File.Create("Success_Dictionary.docx");
             resultData.CopyTo(output);
@@ -55,7 +59,8 @@ namespace BrandUp.DocxGenerator
                 { "Yes" , true },
                 { "No" , false },
             };
-            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.formats, CancellationToken.None);
+            using var template = new MemoryStream(Properties.Resources.formats);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, template, CancellationToken.None);
 
             using var output = File.Create("Success_Formats.docx");
             resultData.CopyTo(output);

@@ -2,6 +2,14 @@
 {
     public static class TypeExtension
     {
+        /// <summary>
+        /// Gets property value from data.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="propName">name of property</param>
+        /// <param name="dataContext">Model with data</param>
+        /// <returns> Value by <c>propName</c></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static object GetValueFromContext(this Type type, string propName, object dataContext)
         {
             if (type.IsAssignableTo(typeof(IDictionary<string, object>)))

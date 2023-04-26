@@ -11,12 +11,15 @@ namespace BrandUp.DocxGenerator
     public static class WordDocumentGenerator
     {
         readonly static Regex command = new(@"\{(?<command>\w+)\((?<params>.*)\)\}", RegexOptions.IgnoreCase);
-        public static async Task<Stream> GenerateDocument(object dataContext, byte[] templateBytes, CancellationToken cancellationToken)
-        {
-            using var templateStream = new MemoryStream(templateBytes);
-            return await GenerateDocument(dataContext, templateStream, cancellationToken);
-        }
 
+        /// <summary>
+        /// File processing .docx from the template by filling in the fields with data from the model.
+        /// </summary>
+        /// <param name="dataContext">Object with data</param>
+        /// <param name="templateStream">Template</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>The .docx file stream </returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
             if (dataContext == null)
@@ -24,7 +27,11 @@ namespace BrandUp.DocxGenerator
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
 
-            using (var wordDocument = WordprocessingDocument.Open(templateStream, true))
+            // WordprocessingDocument changing incoming stream, so we copy data to output stream and changing it. 
+            var output = new MemoryStream();
+            await templateStream.CopyToAsync(output, cancellationToken);
+
+            using (var wordDocument = WordprocessingDocument.Open(output, true))
             {
                 await Task.Run(() =>
                 {
@@ -50,30 +57,31 @@ namespace BrandUp.DocxGenerator
                 }, cancellationToken);
             }
 
-            var output = new MemoryStream();
-
-            templateStream.Seek(0, SeekOrigin.Begin);
-            await templateStream.CopyToAsync(output, cancellationToken);
-
             output.Seek(0, SeekOrigin.Begin);
-
             return output;
         }
 
+        /// <summary>
+        /// Processes a placeholder node.
+        /// </summary>
+        /// <param name="openXmlElementDataContext"></param>
         static void ProcessPlaceholder(OpenXmlElementDataContext openXmlElementDataContext)
         {
-            if (IsContentControl(openXmlElementDataContext))
+            if (openXmlElementDataContext == null)
+                throw new ArgumentNullException(nameof(openXmlElementDataContext));
+
+            if (openXmlElementDataContext.Element.IsContentControl())
             {
                 var element = openXmlElementDataContext.Element as SdtElement;
                 var tagValue = GetTagValue(element);
 
-                Match m = command.Match(tagValue);
-                if (m.Success)
+                Match match = command.Match(tagValue);
+                if (match.Success)
                 {
                     Debug.WriteLine("FoundCommand: " + tagValue);
 
-                    var commandName = m.Groups["command"].Value;
-                    var commandParams = m.Groups["params"].Value;
+                    var commandName = match.Groups["command"].Value;
+                    var commandParams = match.Groups["params"].Value;
 
                     var properties = new List<string>();
                     if (!string.IsNullOrEmpty(commandParams))
@@ -114,6 +122,12 @@ namespace BrandUp.DocxGenerator
             OpenXmlHelper.SetContentOfContentControl(element, content);
         }
 
+        /// <summary>
+        /// Cloned element and set content in placeholders.
+        /// </summary>
+        /// <param name="openXmlElementDataContext"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         static void CloneElementAndSetContentInPlaceholders(OpenXmlElementDataContext openXmlElementDataContext)
         {
             if (openXmlElementDataContext == null)
@@ -164,24 +178,7 @@ namespace BrandUp.DocxGenerator
         {
             Tag tag = OpenXmlHelper.GetTag(element);
 
-            string fullTag = (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
-
-            return fullTag;
-        }
-
-        /// <summary>
-        /// Determines whether [is content control] [the specified open XML element data context].
-        /// </summary>
-        /// <param name="openXmlElementDataContext">The open XML element data context.</param>
-        /// <returns>
-        ///   <c>true</c> if [is content control] [the specified open XML element data context]; otherwise, <c>false</c>.
-        /// </returns>
-        static bool IsContentControl(OpenXmlElementDataContext openXmlElementDataContext)
-        {
-            if (openXmlElementDataContext == null || openXmlElementDataContext.Element == null)
-                return false;
-
-            return openXmlElementDataContext.Element is SdtBlock || openXmlElementDataContext.Element is SdtRun || openXmlElementDataContext.Element is SdtRow || openXmlElementDataContext.Element is SdtCell;
+            return (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
         }
     }
 }
