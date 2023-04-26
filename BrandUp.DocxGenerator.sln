@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A551DB63-03B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{56098BE7-50EB-4B52-BA5C-F3B16FF546CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrandUp.DocxGenerator.Tests", "test\BrandUp.WordDocumentGenerator.Tests\BrandUp.DocxGenerator.Tests.csproj", "{DAEE95C1-5A63-4FB6-A28D-CB5246D21A62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrandUp.DocxGenerator.Tests", "test\BrandUp.WordDocumentGenerator.Tests\BrandUp.DocxGenerator.Tests.csproj", "{DAEE95C1-5A63-4FB6-A28D-CB5246D21A62}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrandUp.DocxGenerator", "src\BrandUp.WordDocumentGenerator\BrandUp.DocxGenerator.csproj", "{6DC854FF-A563-499F-906F-0A9022839AA6}"
 EndProject

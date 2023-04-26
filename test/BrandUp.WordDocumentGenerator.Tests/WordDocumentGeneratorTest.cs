@@ -3,7 +3,7 @@ namespace BrandUp.DocxGenerator
     public class WordDocumentGeneratorTest
     {
         [Fact]
-        public void Success_TestObject()
+        public async void Success_TestObject()
         {
             var data = new TestObject
             {
@@ -11,17 +11,19 @@ namespace BrandUp.DocxGenerator
                 Values = new()
                 {
                     new() { Name = "Tree", Price = 10000, Note = "Big" },
-                    new() { Name = "Garland", Price = 5000, Note = "Long" }
+                    new() { Name = "Garland", Price = 5000, Note = "Long" },
+                    new() { Name = "Tariff", Price = 700, Note = "30 days" },
+                    new() { Name = "Toys", Price = 10, Note = "Round" }
                 }
             };
-            using var resultData = WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test, CancellationToken.None);
 
             using var output = File.Create("Success_TestObject.docx");
             resultData.CopyTo(output);
         }
 
         [Fact]
-        public void Success_Dictionary()
+        public async void Success_Dictionary()
         {
             var data = new Dictionary<string, object>
             {
@@ -33,14 +35,14 @@ namespace BrandUp.DocxGenerator
                         }
                 }
             };
-            using var resultData = WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.test, CancellationToken.None);
 
             using var output = File.Create("Success_Dictionary.docx");
             resultData.CopyTo(output);
         }
 
         [Fact]
-        public void Success_Formats()
+        public async void Success_Formats()
         {
             var data = new Dictionary<string, object>
             {
@@ -53,7 +55,7 @@ namespace BrandUp.DocxGenerator
                 { "Yes" , true },
                 { "No" , false },
             };
-            using var resultData = WordDocumentGenerator.GenerateDocument(data, Properties.Resources.formats);
+            using var resultData = await WordDocumentGenerator.GenerateDocument(data, Properties.Resources.formats, CancellationToken.None);
 
             using var output = File.Create("Success_Formats.docx");
             resultData.CopyTo(output);
