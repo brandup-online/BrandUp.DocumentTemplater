@@ -14,13 +14,18 @@ namespace BrandUp.DocxGenerator
 
         public static Stream GenerateDocument(object dataContext, byte[] templateBytes)
         {
+            using var templateStream = new MemoryStream(templateBytes);
+            return GenerateDocument(dataContext, templateStream);
+        }
+
+        public static Stream GenerateDocument(object dataContext, Stream templateStream)
+        {
             if (dataContext == null)
                 throw new ArgumentNullException(nameof(dataContext));
-            if (templateBytes == null)
-                throw new ArgumentNullException(nameof(templateBytes));
+            if (templateStream == null)
+                throw new ArgumentNullException(nameof(templateStream));
 
-            using var templateFile = new MemoryStream(templateBytes);
-            using (var wordDocument = WordprocessingDocument.Open(templateFile, true))
+            using (var wordDocument = WordprocessingDocument.Open(templateStream, true))
             {
                 wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
                 MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
@@ -44,7 +49,8 @@ namespace BrandUp.DocxGenerator
             }
 
             var output = new MemoryStream();
-            templateFile.WriteTo(output);
+            templateStream.Seek(0, SeekOrigin.Begin);
+            templateStream.CopyTo(output);
             output.Seek(0, SeekOrigin.Begin);
 
             return output;
@@ -55,12 +61,12 @@ namespace BrandUp.DocxGenerator
             if (IsContentControl(openXmlElementDataContext))
             {
                 var element = openXmlElementDataContext.Element as SdtElement;
-                var tagValue = GetTagValue(element, out var templateTagPart, out var tagGuidPart);
+                var tagValue = GetTagValue(element);
 
-                Match m = commandRegex.Match(templateTagPart);
+                Match m = commandRegex.Match(tagValue);
                 if (m.Success)
                 {
-                    Debug.WriteLine("FoundCommand: " + templateTagPart);
+                    Debug.WriteLine("FoundCommand: " + tagValue);
 
                     var commandName = m.Groups["command"].Value;
                     var commandParams = m.Groups["params"].Value;
@@ -229,7 +235,7 @@ namespace BrandUp.DocxGenerator
                                 {
                                     if (format == "b")
                                         output = (bool)value ? "да" : "нет";
-                                    else if (format == "b")
+                                    else if (format == "B")
                                         output = (bool)value ? "Да" : "Нет";
                                     else
                                         output = value.ToString();
@@ -305,28 +311,11 @@ namespace BrandUp.DocxGenerator
         /// <param name="templateTagPart">The template tag part.</param>
         /// <param name="tagGuidPart">The tag GUID part.</param>
         /// <returns></returns>
-        static string GetTagValue(SdtElement element, out string templateTagPart, out string tagGuidPart)
+        static string GetTagValue(SdtElement element)
         {
-            templateTagPart = string.Empty;
-            tagGuidPart = string.Empty;
             Tag tag = openXmlHelper.GetTag(element);
 
             string fullTag = (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
-
-            if (!string.IsNullOrEmpty(fullTag))
-            {
-                string[] tagParts = fullTag.Split(':');
-
-                if (tagParts.Length == 2)
-                {
-                    templateTagPart = tagParts[0];
-                    tagGuidPart = tagParts[1];
-                }
-                else if (tagParts.Length == 1)
-                {
-                    templateTagPart = tagParts[0];
-                }
-            }
 
             return fullTag;
         }

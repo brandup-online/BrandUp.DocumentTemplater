@@ -13,10 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\formats.dotx" />
     <None Remove="Resources\test.dotx" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\formats.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\test.dotx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

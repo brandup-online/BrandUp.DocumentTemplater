@@ -63,6 +63,16 @@ namespace BrandUp.DocxGenerator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] formats {
+            get {
+                object obj = ResourceManager.GetObject("formats", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] test {
             get {
                 object obj = ResourceManager.GetObject("test", resourceCulture);
