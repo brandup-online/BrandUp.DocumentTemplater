@@ -1,14 +1,14 @@
-﻿using BrandUp.DocxGenerator.Handling;
-using BrandUp.DocxGenerator.Internals;
+﻿using BrandUp.DocumentTemplater.Handling;
+using BrandUp.DocumentTemplater.Internals;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace BrandUp.DocxGenerator
+namespace BrandUp.DocumentTemplater
 {
-    public static class WordDocumentGenerator
+    public class WordDocumentTemplater
     {
         readonly static Regex command = new(@"\{(?<command>\w+)\((?<params>.*)\)\}", RegexOptions.IgnoreCase);
 

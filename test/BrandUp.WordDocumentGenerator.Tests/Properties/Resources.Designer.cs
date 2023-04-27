@@ -63,9 +63,59 @@ namespace BrandUp.DocxGenerator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] formats {
+        internal static byte[] _foreach {
             get {
-                object obj = ResourceManager.GetObject("formats", resourceCulture);
+                object obj = ResourceManager.GetObject("_foreach", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] datetimenow {
+            get {
+                object obj = ResourceManager.GetObject("datetimenow", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] doc {
+            get {
+                object obj = ResourceManager.GetObject("doc", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Invoice {
+            get {
+                object obj = ResourceManager.GetObject("Invoice", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] prop {
+            get {
+                object obj = ResourceManager.GetObject("prop", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] setpropertycontext {
+            get {
+                object obj = ResourceManager.GetObject("setpropertycontext", resourceCulture);
                 return ((byte[])(obj));
             }
         }

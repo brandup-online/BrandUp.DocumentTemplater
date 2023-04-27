@@ -13,12 +13,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\formats.dotx" />
+    <None Remove="Resources\datetimenow.dotx" />
+    <None Remove="Resources\doc.doc" />
+    <None Remove="Resources\foreach.dotx" />
+    <None Remove="Resources\Invoice.dotx" />
+    <None Remove="Resources\prop.dotx" />
+    <None Remove="Resources\setpropertycontext.dotx" />
     <None Remove="Resources\test.dotx" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\formats.dotx">
+    <EmbeddedResource Include="Resources\datetimenow.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\doc.doc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\foreach.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Invoice.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\prop.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\setpropertycontext.dotx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\test.dotx">
@@ -40,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BrandUp.WordDocumentGenerator\BrandUp.DocxGenerator.csproj" />
+    <ProjectReference Include="..\..\src\BrandUp.WordDocumentGenerator\BrandUp.DocumentTemplater.csproj" />
   </ItemGroup>
 
   <ItemGroup>

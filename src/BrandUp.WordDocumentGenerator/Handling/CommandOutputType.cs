@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocxGenerator.Handling
+﻿namespace BrandUp.DocumentTemplater.Handling
 {
     /// <summary>
     /// Типы комманд.

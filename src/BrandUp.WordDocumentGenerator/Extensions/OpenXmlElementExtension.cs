@@ -1,7 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace BrandUp.DocxGenerator
+namespace BrandUp.DocumentTemplater
 {
     internal static class OpenXmlElementExtension
     {

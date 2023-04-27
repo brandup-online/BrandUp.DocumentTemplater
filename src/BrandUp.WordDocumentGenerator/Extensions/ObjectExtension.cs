@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocxGenerator
+﻿namespace BrandUp.DocumentTemplater
 {
     internal static class ObjectExtension
     {

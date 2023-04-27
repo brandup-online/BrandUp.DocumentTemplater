@@ -2,7 +2,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace BrandUp.DocxGenerator.Internals
+namespace BrandUp.DocumentTemplater.Internals
 {
     /// <summary>
     /// Helper class for OpenXml operations for document generation

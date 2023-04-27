@@ -1,6 +1,6 @@
 ﻿using DocumentFormat.OpenXml;
 
-namespace BrandUp.DocxGenerator.Internals
+namespace BrandUp.DocumentTemplater.Internals
 {
     /// <summary>
     /// OpenXml element and data context
