@@ -8,9 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace BrandUp.DocumentTemplater
 {
-    public class WordDocumentTemplater
+    public static class WordDocumentTemplater
     {
         readonly static Regex command = new(@"\{(?<command>\w+)\((?<params>.*)\)\}", RegexOptions.IgnoreCase);
+
+        internal static IDictionary<string, List<string>> testPropertyValues;
 
         /// <summary>
         /// File processing .docx from the template by filling in the fields with data from the model.
@@ -26,6 +28,8 @@ namespace BrandUp.DocumentTemplater
                 throw new ArgumentNullException(nameof(dataContext));
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
+
+            testPropertyValues = new Dictionary<string, List<string>>();
 
             // WordprocessingDocument changing incoming stream, so we copy data to output stream and changing it. 
             var output = new MemoryStream();
@@ -95,6 +99,11 @@ namespace BrandUp.DocumentTemplater
                     var result = CommandHandler.Handle(commandName, properties, openXmlElementDataContext.DataContext);
                     if (result.OutputType == CommandOutputType.Content)
                     {
+                        if (testPropertyValues.TryGetValue(tagValue, out var values))
+                            values.Add(result.OutputContent);
+                        else
+                            testPropertyValues.Add(tagValue, new() { result.OutputContent });
+
                         SetContentOfContentControl(openXmlElementDataContext.Element as SdtElement, result.OutputContent);
                     }
                     else if (result.OutputType == CommandOutputType.None)

@@ -1,7 +1,6 @@
-using BrandUp.DocumentTemplater;
-using BrandUp.DocxGenerator.Models;
+using BrandUp.DocumentTemplater.Models;
 
-namespace BrandUp.DocxGenerator
+namespace BrandUp.DocumentTemplater
 {
     public class WordDocumentTemplaterTest : TestBase
     {
@@ -43,8 +42,13 @@ namespace BrandUp.DocxGenerator
             };
 
             using var template = new MemoryStream(Properties.Resources.test);
+            var controls = GetTagsFromTemplate(template);
             using var resultData = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
 
+            var list = GetElementsFromResult(resultData);
+            Test(controls, list, WordDocumentTemplater.testPropertyValues);
+
+            resultData.Seek(0, SeekOrigin.Begin);
             Save(resultData, "Success_TestObject.docx");
         }
 
@@ -54,17 +58,24 @@ namespace BrandUp.DocxGenerator
             var data = new Dictionary<string, object>
             {
                 { "Number" , 102321 },
-                { "Values" , new List<Row>()
+                { "Values" , new List<Models.Row>()
                         {
                             new() { Name = "Tree", Price = 10000, Note = "Big" },
-                            new() { Name = "Garland", Price = 5000, Note = "Long" }
+                            new() { Name = "Garland", Price = 5000, Note = "Long" },
+                            new() { Name = "Tariff", Price = 700, Note = "30 days" },
+                            new() { Name = "Toys", Price = 10, Note = "Round" }
                         }
                 }
             };
 
             using var template = new MemoryStream(Properties.Resources.test);
+            var controls = GetTagsFromTemplate(template);
             using var resultData = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
 
+            var list = GetElementsFromResult(resultData);
+            Test(controls, list, WordDocumentTemplater.testPropertyValues);
+
+            resultData.Seek(0, SeekOrigin.Begin);
             Save(resultData, "Success_Dictionary.docx");
         }
 
@@ -103,7 +114,7 @@ namespace BrandUp.DocxGenerator
                         new Product
                         {
                             Id = 1,
-                            Name ="Тариф \"Лёгкий старт\"",
+                            Name = "Тариф \"Лёгкий старт\"",
                             Quantity = 0,
                             Amount = 700,
                             Price = 700,
@@ -111,7 +122,7 @@ namespace BrandUp.DocxGenerator
                         new Product
                         {
                             Id = 2,
-                            Name ="Тариф \"Професиональный\"",
+                            Name = "Тариф \"Професиональный\"",
                             Quantity = 0,
                             Amount = 1500,
                             Price = 1500,
@@ -122,8 +133,13 @@ namespace BrandUp.DocxGenerator
                 }
             };
             using var template = new MemoryStream(Properties.Resources.Invoice);
+            var controls = GetTagsFromTemplate(template);
             using var resultData = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
 
+            var list = GetElementsFromResult(resultData);
+            Test(controls, list, WordDocumentTemplater.testPropertyValues);
+
+            resultData.Seek(0, SeekOrigin.Begin);
             Save(resultData, "Success_Invoice.docx");
         }
 

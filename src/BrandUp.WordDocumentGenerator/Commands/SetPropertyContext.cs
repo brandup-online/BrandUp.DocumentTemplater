@@ -3,6 +3,9 @@ using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
 {
+    /// <summary>
+    /// Sets property as DataContext
+    /// </summary>
     internal class SetPropertyContext : IDocxCommand
     {
         public string Name => "setcontextofproperty";

@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocxGenerator.Models
+﻿namespace BrandUp.DocumentTemplater.Models
 {
     internal class Invoice
     {

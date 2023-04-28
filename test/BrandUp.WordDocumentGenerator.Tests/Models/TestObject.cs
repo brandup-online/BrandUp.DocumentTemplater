@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocxGenerator.Models
+﻿namespace BrandUp.DocumentTemplater.Models
 {
     class TestObject
     {

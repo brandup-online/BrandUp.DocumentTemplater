@@ -3,6 +3,9 @@ using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
 {
+    /// <summary>
+    /// Sets value to palceholder
+    /// </summary>
     internal class Prop : IDocxCommand
     {
         public string Name => "prop";

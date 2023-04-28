@@ -3,6 +3,9 @@ using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
 {
+    /// <summary>
+    /// Sets current date and time
+    /// </summary>
     internal class DateTimeNow : IDocxCommand
     {
         public string Name => "datetimenow";

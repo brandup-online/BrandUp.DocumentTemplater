@@ -9,7 +9,7 @@
     <IsTestProject>true</IsTestProject>
     <PackageId>$(AssemblyName)</PackageId>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <RootNamespace>BrandUp.DocxGenerator</RootNamespace>
+    <RootNamespace>BrandUp.DocumentTemplater</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
