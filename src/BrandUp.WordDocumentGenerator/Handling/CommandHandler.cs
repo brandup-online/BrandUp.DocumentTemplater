@@ -5,13 +5,15 @@ namespace BrandUp.DocumentTemplater.Handling
 {
     internal static class CommandHandler
     {
-        readonly static IDictionary<string, IDocxCommand> commands = new Dictionary<string, IDocxCommand>
+        readonly static IDictionary<string, IDocxCommand> commands = new Dictionary<string, IDocxCommand>();
+
+        static CommandHandler()
         {
-            { "setcontextofproperty", new SetPropertyContext() },
-            { "foreach", new Foreach() },
-            { "prop", new Prop() },
-            { "datetimenow",  new DateTimeNow() }
-        };
+            AddHandler(new SetPropertyContext());
+            AddHandler(new Foreach());
+            AddHandler(new Prop());
+            AddHandler(new DateTimeNow());
+        }
 
         public static void AddHandler(IDocxCommand command)
         {

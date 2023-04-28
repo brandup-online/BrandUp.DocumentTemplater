@@ -33,6 +33,10 @@ namespace BrandUp.DocxGenerator.Command
                         o2 = "info3",
                         o3 = new DateTime(2023, 04, 07, 13, 10, 08)
                     }
+                },
+                Numbers = new int[]
+                {
+                    1,2,3
                 }
             };
 
