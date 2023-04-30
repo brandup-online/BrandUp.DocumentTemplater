@@ -4,6 +4,9 @@
     {
         public static string ToString(this object value, string format)
         {
+            if (string.IsNullOrEmpty(format))
+                return value.ToString();
+
             if (value is DateTime time)
                 return time.ToString(format);
             else if (value is TimeSpan span)

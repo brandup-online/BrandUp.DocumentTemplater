@@ -132,7 +132,7 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Cloned element and set content in placeholders.
+        /// Cloned element and set content in placeholders. 
         /// </summary>
         /// <param name="openXmlElementDataContext"></param>
         /// <exception cref="ArgumentNullException"></exception>

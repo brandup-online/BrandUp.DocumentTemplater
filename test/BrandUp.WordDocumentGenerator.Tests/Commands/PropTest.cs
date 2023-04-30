@@ -7,7 +7,7 @@ namespace BrandUp.DocumentTemplater.Commands
         public static IEnumerable<object[]> TestContexts = new List<object[]>
         {
             new object[] { "String" },
-            new object[] {new DateTime(2023,12, 22, 13, 55, 16) },
+            new object[] { new DateTime(2023,12, 22, 13, 55, 16) },
             new object[] { new TimeSpan(13, 55, 16) },
             new object[] { 12},
             new object[] { 123123123123m },
@@ -83,6 +83,8 @@ namespace BrandUp.DocumentTemplater.Commands
         [InlineData("No", "B", "Нет")]
         public void SuccessDictionaryFormats(string key, string format, string value)
         {
+            Thread.CurrentThread.CurrentCulture = new("en-US");
+
             var data = new Dictionary<string, object>
             {
                 { "FullDate" , new DateTime(2023,12, 22, 13, 55, 16) },
@@ -122,6 +124,8 @@ namespace BrandUp.DocumentTemplater.Commands
         [InlineData("No", "B", "Нет")]
         public void SuccessObjectFormats(string key, string format, string value)
         {
+            Thread.CurrentThread.CurrentCulture = new("en-US");
+
             var data = new
             {
                 FullDate = new DateTime(2023, 12, 22, 13, 55, 16),

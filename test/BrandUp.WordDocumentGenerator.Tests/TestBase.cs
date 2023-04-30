@@ -8,11 +8,12 @@ namespace BrandUp.DocumentTemplater
         const string TestDirectory = "../Test";
         public TestBase()
         {
-            var info = Directory.CreateDirectory(TestDirectory);
+            Directory.CreateDirectory(TestDirectory);
         }
 
         protected virtual void Save(Stream data, string name)
         {
+            data.Seek(0, SeekOrigin.Begin);
             using var output = File.Create(Path.Combine(TestDirectory, name));
             data.CopyTo(output);
         }

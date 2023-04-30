@@ -14,7 +14,7 @@
         public string INN { get; set; }
         public string KPP { get; set; }
         public string Name { get; set; }
-        public string BankName { get; set; }
+        public string Bank { get; set; }
         public string BankAccount { get; set; }
         public string BIC { get; set; }
         public string CorrespondentAccount { get; set; }
