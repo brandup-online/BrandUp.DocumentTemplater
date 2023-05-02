@@ -6,11 +6,11 @@ namespace BrandUp.DocumentTemplater
     internal static class OpenXmlElementExtension
     {
         /// <summary>
-        /// Determines whether <see cref="OpenXmlElement"> is content control (the specified open XML element data context).
+        /// Определяет что <see cref="OpenXmlElement"> является элементом управления содержимым.
         /// </summary>
-        /// <param name="openXmlElementDataContext">The open XML element data context.</param>
+        /// <param name="element">The open XML element</param>
         /// <returns>
-        /// <c>true</c> if <see cref="OpenXmlElement"> is content control (the specified open XML element data context); otherwise, <c>false</c>.
+        /// <c>true</c> если<see cref="OpenXmlElement"> является элементом управления содержимым; иначе, <c>false</c>.
         /// </returns>
         public static bool IsContentControl(this OpenXmlElement element)
         {

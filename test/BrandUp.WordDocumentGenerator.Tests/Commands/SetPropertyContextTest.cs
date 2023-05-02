@@ -2,10 +2,10 @@
 
 namespace BrandUp.DocumentTemplater.Commands
 {
-    public class SetPropertyContextTest : TestBase
+    public class SetPropertyContextTest
     {
         /// <summary>
-        /// Тест команды setcontextofproperty с параметром "Top"
+        /// Тест команды setcontextofproperty с параметром контекста "Top"
         /// </summary>
         [Fact]
         public void Success()

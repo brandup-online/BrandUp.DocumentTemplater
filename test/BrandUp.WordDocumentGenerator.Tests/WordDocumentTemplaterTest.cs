@@ -1,11 +1,18 @@
 using BrandUp.DocumentTemplater.Models;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections;
 using System.Reflection;
 
 namespace BrandUp.DocumentTemplater
 {
-    public class WordDocumentTemplaterTest : TestBase
+    public class WordDocumentTemplaterTest
     {
+        const string TestDirectory = "../Test";
+
+        /// <summary>
+        /// Попытка передать на вход устаревший формать файла
+        /// </summary>
         [Fact]
         public async void WrongFiles()
         {
@@ -28,6 +35,9 @@ namespace BrandUp.DocumentTemplater
             });
         }
 
+        /// <summary>
+        /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.List"/>
+        /// </summary>
         [Fact]
         public async void Success_Foreach()
         {
@@ -87,6 +97,9 @@ namespace BrandUp.DocumentTemplater
             #endregion
         }
 
+        /// <summary>
+        /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.Content"/>
+        /// </summary>
         [Fact]
         public async void Success_Prop()
         {
@@ -129,6 +142,9 @@ namespace BrandUp.DocumentTemplater
             #endregion
         }
 
+        /// <summary>
+        /// Проверка сложного шаблона
+        /// </summary>
         [Fact]
         public async void Success_Invoice()
         {
@@ -183,7 +199,6 @@ namespace BrandUp.DocumentTemplater
                 }
             };
             using var template = new MemoryStream(Properties.Resources.Invoice);
-            var controls = GetTagsFromTemplate(template);
             using var resultDocument = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
 
             #region Assert
@@ -191,66 +206,66 @@ namespace BrandUp.DocumentTemplater
             var elements = GetElementsFromResult(resultDocument);
             try
             {
-                var tag = "prop({0})";
+                var tag = "{{prop({0})}}"; //Общий вид команды
 
                 var testDictionary = new Dictionary<string, List<string>>();
                 FillTestData(data, testDictionary);
 
-                var ids = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Id") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var ids = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Id"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.Equal(4, ids.Count);
                 Assert.True(ids.Select(e => e.Value).Distinct().SequenceEqual(testDictionary["Id"]));
 
-                var dates = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Date, \"dd.MM.yyyy\"") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var dates = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Date, \"dd.MM.yyyy\""), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.Equal(2, dates.Count);
                 Assert.True(dates.Select(e => e.Value).Distinct().SequenceEqual(testDictionary["Date"]));
 
-                var INNs = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "INN") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var INNs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "INN"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(INNs.Select(e => e.Value).SequenceEqual(testDictionary["INN"]));
 
-                var KPPs = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "KPP") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var KPPs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "KPP"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(KPPs.Select(e => e.Value).SequenceEqual(testDictionary["KPP"]));
 
-                var Names = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Name") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Names = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Name"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.Equal(4, Names.Count);
                 Assert.True(Names.Select(e => e.Value).SequenceEqual(testDictionary["Name"]));
 
-                var Banks = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Bank") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Banks = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Bank"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Banks.Select(e => e.Value).SequenceEqual(testDictionary["Bank"]));
 
-                var BankAccounts = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "BankAccount") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var BankAccounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "BankAccount"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(BankAccounts.Select(e => e.Value).SequenceEqual(testDictionary["BankAccount"]));
 
-                var BICs = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "BIC") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var BICs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "BIC"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(BICs.Select(e => e.Value).SequenceEqual(testDictionary["BIC"]));
 
-                var CorrespondentAccounts = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "CorrespondentAccount") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var CorrespondentAccounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "CorrespondentAccount"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(CorrespondentAccounts.Select(e => e.Value).SequenceEqual(testDictionary["CorrespondentAccount"]));
 
-                var Addresses = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Address") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Addresses = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Address"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Addresses.Select(e => e.Value).SequenceEqual(testDictionary["Address"]));
 
-                var Emails = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Email") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Emails = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Email"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Emails.Select(e => e.Value).SequenceEqual(testDictionary["Email"]));
 
-                var Links = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Link") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Links = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Link"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Links.Select(e => e.Value).SequenceEqual(testDictionary["Link"]));
 
-                var Phones = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Phone") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Phones = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Phone"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Phones.Select(e => e.Value).SequenceEqual(testDictionary["Phone"]));
 
-                var Quantitys = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Quantity") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Quantitys = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Quantity"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Quantitys.Select(e => e.Value).SequenceEqual(testDictionary["Quantity"]));
 
-                var Amounts = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Amount") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Amounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Amount"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Amounts.Select(e => e.Value).SequenceEqual(testDictionary["Amount"]));
 
-                var Prices = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Price") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Prices = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Price"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Prices.Select(e => e.Value).SequenceEqual(testDictionary["Price"]));
 
-                var Taxs = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "Tax, \"##;##;без НДС\"") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var Taxs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Tax, \"##;##;без НДС\""), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(Taxs.Select(e => e.Value).SequenceEqual(new string[] { "без НДС" }));
 
-                var TotalSums = elements.Where(e => e.TagCommand.Equals("{" + string.Format(tag, "TotalSum") + "}", StringComparison.OrdinalIgnoreCase)).ToList();
+                var TotalSums = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "TotalSum"), StringComparison.OrdinalIgnoreCase)).ToList();
                 Assert.True(TotalSums.Select(e => e.Value).SequenceEqual(testDictionary["TotalSum"]));
             }
             finally
@@ -260,7 +275,10 @@ namespace BrandUp.DocumentTemplater
 
             #endregion
         }
-        void FillTestData(object data, IDictionary<string, List<string>> dictionary)
+
+        #region Helpers
+
+        static void FillTestData(object data, IDictionary<string, List<string>> dictionary)
         {
             var type = data.GetType();
             var properties = type.GetProperties().ToList();
@@ -288,7 +306,7 @@ namespace BrandUp.DocumentTemplater
             }
         }
 
-        void AddToDictionary(PropertyInfo property, object obj, IDictionary<string, List<string>> dictionary, string format = null)
+        static void AddToDictionary(PropertyInfo property, object obj, IDictionary<string, List<string>> dictionary, string format = null)
         {
             if (obj == null)
                 return;
@@ -299,6 +317,38 @@ namespace BrandUp.DocumentTemplater
             if (dictionary.TryGetValue(property.Name, out List<string> list))
                 list.Add(value.ToString(format));
             else dictionary.Add(property.Name, new() { property.GetValue(obj).ToString(format) });
+        }
+
+        static void Save(Stream data, string name)
+        {
+            data.Seek(0, SeekOrigin.Begin);
+            using var output = File.Create(Path.Combine(TestDirectory, name));
+            data.CopyTo(output);
+        }
+
+        static List<ResultData> GetElementsFromResult(Stream stream)
+        {
+            var dict = new List<ResultData>();
+            using (var wordDocument = WordprocessingDocument.Open(stream, false))
+            {
+                dict = wordDocument.MainDocumentPart.Document.Body.Descendants<SdtElement>()
+                    .Where(it => it.SdtProperties.GetFirstChild<Tag>() != null).Select(it => new ResultData(it.SdtProperties.GetFirstChild<Tag>().Val.Value, it.InnerText)).ToList();
+            }
+
+            return dict;
+        }
+
+        #endregion
+    }
+    public class ResultData
+    {
+        public string TagCommand { get; set; }
+        public string Value { get; set; }
+
+        public ResultData(string tagCommand, string value)
+        {
+            TagCommand = tagCommand ?? throw new ArgumentNullException(nameof(tagCommand));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
 }

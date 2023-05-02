@@ -6,7 +6,7 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Sets collection as DataContext
     /// </summary>
-    internal class Foreach : IDocxCommand
+    internal class Foreach : IContextCommand
     {
         public string Name => "foreach";
         public HandleResult Execute(List<string> properties, object dataContext)

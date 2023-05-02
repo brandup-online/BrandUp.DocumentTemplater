@@ -2,10 +2,10 @@
 
 namespace BrandUp.DocumentTemplater.Commands
 {
-    public class ForeachTest : TestBase
+    public class ForeachTest
     {
         /// <summary>
-        /// Тест команды Foreach без параметров
+        /// Тест команды <see cref="Foreach"/> без параметров
         /// </summary>
         [Fact]
         public void SuccessParameterless()
@@ -21,12 +21,15 @@ namespace BrandUp.DocumentTemplater.Commands
             Assert.Same(data, result.DataContext);
             Assert.Null(result.OutputContent);
             Assert.NotNull(result.OutputList);
-            Assert.Collection(result.OutputList, x => Assert.Equal(1, x), x => Assert.Equal(2, x), x => Assert.Equal(3, x));
+            Assert.Collection(result.OutputList,
+                x => Assert.Equal(1, x),
+                x => Assert.Equal(2, x),
+                x => Assert.Equal(3, x));
             Assert.Equal(CommandOutputType.List, result.OutputType);
         }
 
         /// <summary>
-        /// Тест команды Foreach с параметром "Obj"
+        /// Тест команды <see cref="Foreach"/> с параметром контекста "Obj". 
         /// </summary>
         [Fact]
         public void SuccessObj()
@@ -62,7 +65,6 @@ namespace BrandUp.DocumentTemplater.Commands
                     1,2,3
                 }
             };
-
 
             var command = new Foreach();
             var result = command.Execute(new() { "Obj" }, data);

@@ -6,7 +6,7 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Sets property as DataContext
     /// </summary>
-    internal class SetPropertyContext : IDocxCommand
+    internal class SetPropertyContext : IContextCommand
     {
         public string Name => "setcontextofproperty";
         public HandleResult Execute(List<string> properties, object dataContext)

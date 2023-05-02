@@ -6,7 +6,7 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Sets current date and time
     /// </summary>
-    internal class DateTimeNow : IDocxCommand
+    internal class DateTimeNow : IContextCommand
     {
         public string Name => "datetimenow";
 

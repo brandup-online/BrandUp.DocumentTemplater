@@ -15,12 +15,12 @@ namespace BrandUp.DocumentTemplater
         internal static IDictionary<string, List<string>> testPropertyValues;
 
         /// <summary>
-        /// File processing .docx from the template by filling in the fields with data from the model.
+        /// Преобразует шаблон в .docx документ, записывая во все элементы управления соответствующие значения
         /// </summary>
-        /// <param name="dataContext">Object with data</param>
-        /// <param name="templateStream">Template</param>
-        /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns>The .docx file stream </returns>
+        /// <param name="dataContext">Контекст данных</param>
+        /// <param name="templateStream">Шаблон</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        /// <returns>.docx файл</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
@@ -31,7 +31,7 @@ namespace BrandUp.DocumentTemplater
 
             testPropertyValues = new Dictionary<string, List<string>>();
 
-            // WordprocessingDocument changing incoming stream, so we copy data to output stream and changing it. 
+            // WordprocessingDocument изменяет поток, поэтому сначала создаем выходной поток. 
             var output = new MemoryStream();
             await templateStream.CopyToAsync(output, cancellationToken);
 
@@ -66,9 +66,9 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Processes a placeholder node.
+        /// Обрабатывает заглушку
         /// </summary>
-        /// <param name="openXmlElementDataContext"></param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         static void ProcessPlaceholder(OpenXmlElementDataContext openXmlElementDataContext)
         {
             if (openXmlElementDataContext == null)
@@ -132,9 +132,9 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Cloned element and set content in placeholders. 
+        /// Клонирует элемент и записывает данные 
         /// </summary>
-        /// <param name="openXmlElementDataContext"></param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NullReferenceException"></exception>
         static void CloneElementAndSetContentInPlaceholders(OpenXmlElementDataContext openXmlElementDataContext)
@@ -161,9 +161,9 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Populates the other open XML elements.
+        /// Заполняет другие открытые элементы XML.
         /// </summary>
-        /// <param name="openXmlElementDataContext">The open XML element data context.</param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         static void PopulateOtherOpenXmlElements(OpenXmlElementDataContext openXmlElementDataContext)
         {
             if (openXmlElementDataContext.Element is OpenXmlCompositeElement && openXmlElementDataContext.Element.HasChildren)
@@ -179,10 +179,10 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Gets the tag value.
+        ///Получает значение тега.
         /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
+        /// <param name="element">Элемент.</param>
+        /// <returns>тег</returns>
         static string GetTagValue(SdtElement element)
         {
             Tag tag = OpenXmlHelper.GetTag(element);

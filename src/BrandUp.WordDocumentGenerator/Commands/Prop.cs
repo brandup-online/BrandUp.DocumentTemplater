@@ -6,7 +6,7 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Sets value to palceholder
     /// </summary>
-    internal class Prop : IDocxCommand
+    internal class Prop : IContextCommand
     {
         public string Name => "prop";
         public HandleResult Execute(List<string> properties, object dataContext)
