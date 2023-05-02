@@ -4,23 +4,33 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets current date and time
+    /// Устанавливает текущее дату и время
     /// </summary>
     internal class DateTimeNow : IContextCommand
     {
+        #region IContextCommand members
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string Name => "datetimenow";
 
-        public HandleResult Execute(List<string> properties, object dataContext)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public HandleResult Execute(List<string> parameters, object dataContext)
         {
             string output;
             DateTime d = DateTime.Now;
 
-            if (properties.Count > 0)
-                output = d.ToString(properties[0]);
+            if (parameters.Count > 0)
+                output = d.ToString(parameters[0]);
             else
                 output = d.ToString();
 
             return new(dataContext, output);
         }
+
+        #endregion
     }
 }

@@ -182,7 +182,7 @@ namespace BrandUp.DocumentTemplater.Internals
         #region Private Methods
 
         /// <summary>
-        ///Определяет, является ли указанный элемент управления содержимым многострочным.
+        /// Определяет, является ли указанный элемент управления содержимым многострочным.
         /// </summary>
         /// <param name="contentControl">элемента управления содержимым</param>
         /// <returns>

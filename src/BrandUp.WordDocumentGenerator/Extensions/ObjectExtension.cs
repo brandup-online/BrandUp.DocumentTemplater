@@ -2,6 +2,12 @@
 {
     internal static class ObjectExtension
     {
+        /// <summary>
+        /// Приводит объект в стороку с соответствующем форматом
+        /// </summary>
+        /// <param name="value">Объект</param>
+        /// <param name="format">Формат</param>
+        /// <returns> Форматированую строку</returns>
         public static string ToString(this object value, string format)
         {
             if (string.IsNullOrEmpty(format))

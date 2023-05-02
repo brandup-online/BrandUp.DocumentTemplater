@@ -8,12 +8,22 @@ namespace BrandUp.DocumentTemplater.Commands
     /// </summary>
     internal class SetPropertyContext : IContextCommand
     {
+        #region IContextCommand members
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string Name => "setcontextofproperty";
-        public HandleResult Execute(List<string> properties, object dataContext)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public HandleResult Execute(List<string> parameters, object dataContext)
         {
-            object value = dataContext.GetType().GetValueFromContext(properties[0], dataContext);
+            object value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext);
 
             return new(value);
         }
+
+        #endregion
     }
 }

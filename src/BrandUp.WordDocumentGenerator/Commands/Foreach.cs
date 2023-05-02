@@ -8,13 +8,21 @@ namespace BrandUp.DocumentTemplater.Commands
     /// </summary>
     internal class Foreach : IContextCommand
     {
+        #region IContextCommand members
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string Name => "foreach";
-        public HandleResult Execute(List<string> properties, object dataContext)
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public HandleResult Execute(List<string> parameters, object dataContext)
         {
             var items = new List<object>();
             var value = dataContext;
-            if (properties.Any())
-                value = value.GetType().GetValueFromContext(properties[0], value) ?? dataContext;
+            if (parameters.Any())
+                value = value.GetType().GetValueFromContext(parameters[0], value) ?? dataContext;
 
             if (value is System.Collections.IEnumerable collection)
             {
@@ -24,5 +32,7 @@ namespace BrandUp.DocumentTemplater.Commands
 
             return new(dataContext, items);
         }
+
+        #endregion
     }
 }

@@ -3,7 +3,7 @@
 namespace BrandUp.DocumentTemplater.Abstraction
 {
     /// <summary>
-    /// Коммада обрабатывающая контекст для 
+    /// Коммада обрабатывающая контекст для записи в элемент управления
     /// </summary>
     public interface IContextCommand
     {
@@ -14,9 +14,9 @@ namespace BrandUp.DocumentTemplater.Abstraction
         /// <summary>
         /// Выполнение команды
         /// </summary>
-        /// <param name="properties">Параметры команды</param>
+        /// <param name="parameters">Параметры команды</param>
         /// <param name="dataContext">Контекст команды</param>
         /// <returns><see cref="HandleResult"/></returns>
-        public HandleResult Execute(List<string> properties, object dataContext);
+        public HandleResult Execute(List<string> parameters, object dataContext);
     }
 }

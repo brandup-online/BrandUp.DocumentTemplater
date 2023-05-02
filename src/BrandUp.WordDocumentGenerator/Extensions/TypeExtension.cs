@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace BrandUp.DocumentTemplater
+﻿namespace BrandUp.DocumentTemplater
 {
     public static class TypeExtension
     {
@@ -31,11 +29,6 @@ namespace BrandUp.DocumentTemplater
                     return string.Empty;
                 }
             }
-        }
-
-        public static bool IsContentType(this Type type)
-        {
-            return type.IsValueType || type == typeof(string) || type.IsAssignableTo(typeof(IEnumerable));
         }
     }
 }

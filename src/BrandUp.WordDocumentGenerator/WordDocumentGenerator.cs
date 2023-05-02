@@ -179,7 +179,7 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        ///Получает значение тега.
+        /// Получает значение тега.
         /// </summary>
         /// <param name="element">Элемент.</param>
         /// <returns>тег</returns>
