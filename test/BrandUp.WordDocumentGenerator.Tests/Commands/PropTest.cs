@@ -20,7 +20,7 @@ namespace BrandUp.DocumentTemplater.Commands
         };
 
         /// <summary>
-        /// Выполнение команды Prop, без параметров.
+        /// Выполнение команды <see cref="Prop"/>, без параметров.
         /// </summary>
         /// <param name="context">Контекст данных</param>
         [Theory]
@@ -38,7 +38,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с одним параметром - имя свойства. Дата контекст - словарь
+        /// Выполнение команды <see cref="Prop"/> с одним параметром - имя свойства. Дата контекст - словарь
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>
@@ -74,7 +74,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с двумя парамтрами: имя свойства, формат. Дата контекст словарь
+        /// Выполнение команды <see cref="Prop"/> с двумя парамтрами: имя свойства, формат. Дата контекст словарь
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>
@@ -115,7 +115,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с двумя парамтрами: имя свойства, формат. Дата контекст объект.
+        /// Выполнение команды <see cref="Prop"/> с двумя парамтрами: имя свойства, формат. Дата контекст объект.
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>

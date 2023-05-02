@@ -42,7 +42,7 @@ namespace BrandUp.DocumentTemplater
         public async void Success_Foreach()
         {
             var testObj = new { o1 = 1, o2 = "abc", o3 = new DateTime(2022, 04, 20, 13, 55, 15) };
-            var list = new List<object>
+            var testList = new List<object>
             {
                 testObj,
                 testObj,
@@ -85,7 +85,7 @@ namespace BrandUp.DocumentTemplater
                 Assert.Equal(4, o3Elements.Count());
                 Assert.All(o3Elements, e => Assert.Equal(testObj.o3.ToString(), e.Value));
 
-                var intElements = elements.Where(e => e.TagCommand.ToLower() == "{prop()}");
+                var intElements = elements.Where(e => e.TagCommand.ToLower() == "{prop()}"); // IntArray
                 Assert.Equal(3, intElements.Count());
                 Assert.True(intElements.Select(e => e.Value).SequenceEqual(obj.IntArray.Select(e => e.ToString())));
             }
