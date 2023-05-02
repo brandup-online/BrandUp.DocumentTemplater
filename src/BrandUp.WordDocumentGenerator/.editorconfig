@@ -76,3 +76,9 @@ csharp_style_expression_bodied_local_functions = false:silent
 
 # SYSLIB1045: Convert to 'GeneratedRegexAttribute'.
 dotnet_diagnostic.SYSLIB1045.severity = silent
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none
+
+# CS1570: XML comment has badly formed XML
+dotnet_diagnostic.CS1570.severity = none

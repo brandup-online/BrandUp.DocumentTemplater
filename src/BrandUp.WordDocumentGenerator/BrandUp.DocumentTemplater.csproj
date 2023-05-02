@@ -2,6 +2,13 @@
 
   <PropertyGroup>
 	<TargetFramework>net7.0</TargetFramework>
+	<Authors>Dmitry Shashev</Authors>
+	<Authors>Dmitry Kovyazin</Authors>
+	<Company>BrandUp.online</Company>
+	<Product>BrandUp.DocumentTemplater</Product>
+	<RepositoryUrl>https://github.com/brandup-online/BrandUp.DocumentTemplater</RepositoryUrl>
+	<PackageProjectUrl>https://github.com/brandup-online/BrandUp.DocumentTemplater</PackageProjectUrl>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
