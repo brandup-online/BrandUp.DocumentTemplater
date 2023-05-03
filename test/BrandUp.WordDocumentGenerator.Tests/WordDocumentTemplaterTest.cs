@@ -11,7 +11,7 @@ namespace BrandUp.DocumentTemplater
         const string TestDirectory = "../Test";
 
         /// <summary>
-        /// Попытка передать на вход устаревший формать файла
+        /// Попытка передать на вход устаревший формат файла
         /// </summary>
         [Fact]
         public async void WrongFiles()
@@ -340,6 +340,7 @@ namespace BrandUp.DocumentTemplater
 
         #endregion
     }
+
     public class ResultData
     {
         public string TagCommand { get; set; }

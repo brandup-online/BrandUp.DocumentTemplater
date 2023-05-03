@@ -26,7 +26,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Тест комманды <see cref="DateTimeNow"/> c параметром формата "format"
+        /// Тест комманды <see cref="DateTimeNow"/> c параметром "format"
         /// </summary>
         [Fact]
         public void Success_Format()

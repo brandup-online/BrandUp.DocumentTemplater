@@ -5,7 +5,7 @@ namespace BrandUp.DocumentTemplater.Commands
     public class PropTest
     {
         /// <summary>
-        /// Значения все поддерживаемых объектов. 
+        /// Значения всех поддерживаемых объектов. 
         /// </summary>
         public static IEnumerable<object[]> TestContexts = new List<object[]>
         {

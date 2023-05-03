@@ -4,7 +4,7 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets property as DataContext
+    /// Задает свойство как контектст данных
     /// </summary>
     internal class SetPropertyContext : IContextCommand
     {

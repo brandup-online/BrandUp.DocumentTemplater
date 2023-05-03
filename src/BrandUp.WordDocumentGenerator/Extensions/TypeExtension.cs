@@ -1,6 +1,6 @@
 ﻿namespace BrandUp.DocumentTemplater
 {
-    public static class TypeExtension
+    internal static class TypeExtension
     {
         /// <summary>
         /// Возваращает данные из контектста

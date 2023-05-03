@@ -12,8 +12,6 @@ namespace BrandUp.DocumentTemplater
     {
         readonly static Regex command = new(@"\{(?<command>\w+)\((?<params>.*)\)\}", RegexOptions.IgnoreCase);
 
-        internal static IDictionary<string, List<string>> testPropertyValues;
-
         /// <summary>
         /// Преобразует шаблон в .docx документ, записывая во все элементы управления соответствующие значения
         /// </summary>
@@ -28,8 +26,6 @@ namespace BrandUp.DocumentTemplater
                 throw new ArgumentNullException(nameof(dataContext));
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
-
-            testPropertyValues = new Dictionary<string, List<string>>();
 
             // WordprocessingDocument изменяет поток, поэтому сначала создаем выходной поток. 
             var output = new MemoryStream();
@@ -65,6 +61,8 @@ namespace BrandUp.DocumentTemplater
             return output;
         }
 
+        #region Helpers
+
         /// <summary>
         /// Обрабатывает заглушку
         /// </summary>
@@ -99,11 +97,6 @@ namespace BrandUp.DocumentTemplater
                     var result = CommandHandler.Handle(commandName, properties, openXmlElementDataContext.DataContext);
                     if (result.OutputType == CommandOutputType.Content)
                     {
-                        if (testPropertyValues.TryGetValue(tagValue, out var values))
-                            values.Add(result.OutputContent);
-                        else
-                            testPropertyValues.Add(tagValue, new() { result.OutputContent });
-
                         SetContentOfContentControl(openXmlElementDataContext.Element as SdtElement, result.OutputContent);
                     }
                     else if (result.OutputType == CommandOutputType.None)
@@ -189,5 +182,7 @@ namespace BrandUp.DocumentTemplater
 
             return (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
         }
+
+        #endregion
     }
 }

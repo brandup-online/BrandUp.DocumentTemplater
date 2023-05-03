@@ -4,7 +4,7 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets value to palceholder
+    ///  Устанивливает значение в соответствующий элемент управлнеие
     /// </summary>
     internal class Prop : IContextCommand
     {

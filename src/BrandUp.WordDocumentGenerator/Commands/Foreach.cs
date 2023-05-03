@@ -4,11 +4,12 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets collection as DataContext
+    /// Устанавливает коллекцию как контекст данных
     /// </summary>
     internal class Foreach : IContextCommand
     {
         #region IContextCommand members
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>

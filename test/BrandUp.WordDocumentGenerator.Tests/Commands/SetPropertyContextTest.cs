@@ -35,7 +35,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Тест команды <see cref="SetPropertyContext"/> с параметром контекста "Top". Контекст данных, объект.
+        /// Тест команды <see cref="SetPropertyContext"/> с параметром контекста "Top". Контекст данных, словарь.
         /// </summary>
         [Fact]
         public void Success_Dictionary()
