@@ -1,6 +1,8 @@
 # BrandUp.WordGenerator
 
-**BrandUp.WordGenerator** — это фреймворк для создания .docx файлов из шаблонов.
+**BrandUp.WordGenerator** — фреймворк для создания .docx файлов из шаблонов.
+
+[![Build status](https://dev.azure.com/brandup/BrandUp%20Core/_apis/build/status/BrandUp/BrandUp.DocumentTemplater)](https://dev.azure.com/brandup/BrandUp%20Core/_build/latest?definitionId=55)
 
 ## Подготовка шаблона
 
