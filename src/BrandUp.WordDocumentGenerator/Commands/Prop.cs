@@ -6,18 +6,12 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     ///  Устанивливает значение в соответствующий элемент управлнеие
     /// </summary>
-    internal class Prop : IContextCommand
+    internal class Prop : ITemplaterCommand
     {
         #region IContextCommand members
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public string Name => "prop";
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
             string output = null;

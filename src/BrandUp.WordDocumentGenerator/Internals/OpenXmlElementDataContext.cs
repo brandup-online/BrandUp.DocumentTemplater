@@ -14,7 +14,7 @@ namespace BrandUp.DocumentTemplater.Internals
         /// <summary>
         /// Контекст данных
         /// </summary>
-        public object DataContext { get; set; }
+        public object DataContext { get; }
 
         public OpenXmlElementDataContext(OpenXmlElement element)
         {

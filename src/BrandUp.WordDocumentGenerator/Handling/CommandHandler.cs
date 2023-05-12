@@ -5,7 +5,7 @@ namespace BrandUp.DocumentTemplater.Handling
 {
     internal static class CommandHandler
     {
-        readonly static IDictionary<string, IContextCommand> commands = new Dictionary<string, IContextCommand>();
+        readonly static IDictionary<string, ITemplaterCommand> commands = new Dictionary<string, ITemplaterCommand>();
 
         static CommandHandler()
         {
@@ -20,7 +20,7 @@ namespace BrandUp.DocumentTemplater.Handling
         /// </summary>
         /// <param name="command"></param>
         /// <exception cref="ArgumentException"></exception>
-        public static void AddHandler(IContextCommand command)
+        public static void AddHandler(ITemplaterCommand command)
         {
             if (!commands.TryAdd(command.Name.ToLower(), command))
             {
@@ -48,7 +48,8 @@ namespace BrandUp.DocumentTemplater.Handling
 
             if (commands.TryGetValue(commandName.ToLower(), out var command))
                 return command.Execute(properties, dataContext);
-            else throw new ArgumentException("Wrong command", nameof(commandName));
+            else
+                throw new ArgumentException("Wrong command", nameof(commandName));
         }
     }
 }

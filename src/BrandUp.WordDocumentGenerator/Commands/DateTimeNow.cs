@@ -6,18 +6,12 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Устанавливает текущее дату и время
     /// </summary>
-    internal class DateTimeNow : IContextCommand
+    internal class DateTimeNow : ITemplaterCommand
     {
         #region IContextCommand members
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public string Name => "datetimenow";
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
             string output;

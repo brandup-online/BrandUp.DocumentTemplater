@@ -1,10 +1,10 @@
-﻿using BrandUp.DocumentTemplater.Handling;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+using BrandUp.DocumentTemplater.Handling;
 using BrandUp.DocumentTemplater.Internals;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace BrandUp.DocumentTemplater
 {
@@ -33,28 +33,29 @@ namespace BrandUp.DocumentTemplater
 
             using (var wordDocument = WordprocessingDocument.Open(output, true))
             {
-                await Task.Run(() =>
+                wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
+                MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
+                Document document = mainDocumentPart.Document;
+
+                foreach (HeaderPart part in mainDocumentPart.HeaderParts)
                 {
-                    wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
-                    MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
-                    Document document = mainDocumentPart.Document;
+                    ProcessPlaceholder(new(part.Header, dataContext));
+                    part.Header.Save();
+                }
 
-                    foreach (HeaderPart part in mainDocumentPart.HeaderParts)
-                    {
-                        ProcessPlaceholder(new(part.Header, dataContext));
-                        part.Header.Save();
-                    }
+                cancellationToken.ThrowIfCancellationRequested();
 
-                    foreach (FooterPart part in mainDocumentPart.FooterParts)
-                    {
-                        ProcessPlaceholder(new(part.Footer, dataContext));
-                        part.Footer.Save();
-                    }
+                foreach (FooterPart part in mainDocumentPart.FooterParts)
+                {
+                    ProcessPlaceholder(new(part.Footer, dataContext));
+                    part.Footer.Save();
+                }
 
-                    ProcessPlaceholder(new(document, dataContext));
-                    OpenXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
-                    document.Save();
-                }, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                ProcessPlaceholder(new(document, dataContext));
+                OpenXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
+                document.Save();
             }
 
             output.Seek(0, SeekOrigin.Begin);

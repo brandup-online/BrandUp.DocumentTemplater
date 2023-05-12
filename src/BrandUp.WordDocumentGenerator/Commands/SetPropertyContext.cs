@@ -6,17 +6,12 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Задает свойство как контектст данных
     /// </summary>
-    internal class SetPropertyContext : IContextCommand
+    internal class SetPropertyContext : ITemplaterCommand
     {
         #region IContextCommand members
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public string Name => "setcontextofproperty";
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
+
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
             object value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext);

@@ -6,23 +6,17 @@ namespace BrandUp.DocumentTemplater.Commands
     /// <summary>
     /// Устанавливает коллекцию как контекст данных
     /// </summary>
-    internal class Foreach : IContextCommand
+    internal class Foreach : ITemplaterCommand
     {
         #region IContextCommand members
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public string Name => "foreach";
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
             var items = new List<object>();
             var value = dataContext;
-            if (parameters.Any())
+            if (parameters.Count > 0)
                 value = value.GetType().GetValueFromContext(parameters[0], value) ?? dataContext;
 
             if (value is System.Collections.IEnumerable collection)

@@ -13,9 +13,7 @@
         public static object GetValueFromContext(this Type type, string propName, object dataContext)
         {
             if (type.IsAssignableTo(typeof(IDictionary<string, object>)))
-            {
                 return ((IDictionary<string, object>)dataContext)[propName];
-            }
             else
             {
                 try

@@ -21,21 +21,13 @@ namespace BrandUp.DocumentTemplater.Internals
         public static OpenXmlCompositeElement GetSdtContentOfContentControl(SdtElement element)
         {
             if (element is SdtRun sdtRunELement)
-            {
                 return sdtRunELement.SdtContentRun;
-            }
             else if (element is SdtBlock sdtBlockElement)
-            {
                 return sdtBlockElement.SdtContentBlock;
-            }
             else if (element is SdtCell sdtCellElement)
-            {
                 return sdtCellElement.SdtContentCell;
-            }
             else if (element is SdtRow sdtRowElement)
-            {
                 return sdtRowElement.SdtContentRow;
-            }
 
             return null;
         }
@@ -81,16 +73,12 @@ namespace BrandUp.DocumentTemplater.Internals
                     int randomId = rng.Next(int.MaxValue);
 
                     while (existingIds.Contains(randomId))
-                    {
                         rng.Next(int.MaxValue);
-                    }
 
                     sdtId.Val.Value = randomId;
                 }
                 else
-                {
                     existingIds.Add(sdtId.Val);
-                }
             }
         }
 
@@ -129,36 +117,26 @@ namespace BrandUp.DocumentTemplater.Internals
                         Run run = CreateRun(openXmlCompositeElement, textSplit);
 
                         if (addBreak)
-                        {
-                            run.AppendChild<Break>(new Break());
-                        }
+                            run.AppendChild(new Break());
 
                         if (!addBreak)
-                        {
                             addBreak = true;
-                        }
 
                         runs.Add(run);
                     }
                 }
                 else
-                {
                     runs.Add(CreateRun(openXmlCompositeElement, content));
-                }
 
                 if (openXmlCompositeElement is SdtContentCell)
-                {
                     AddRunsToSdtContentCell(openXmlCompositeElement as SdtContentCell, runs);
-                }
                 else if (openXmlCompositeElement is SdtContentBlock)
                 {
                     Paragraph para = CreateParagraph(openXmlCompositeElement, runs);
                     SetSdtContentKeepingPermissionElements(openXmlCompositeElement, para);
                 }
                 else
-                {
                     SetSdtContentKeepingPermissionElements(openXmlCompositeElement, runs);
-                }
             }
         }
 
@@ -195,9 +173,8 @@ namespace BrandUp.DocumentTemplater.Internals
             bool isMultiline = false;
 
             if (contentText != null && contentText.MultiLine != null)
-            {
                 isMultiline = contentText.MultiLine.Value == true;
-            }
+
             return isMultiline;
         }
 
@@ -213,16 +190,12 @@ namespace BrandUp.DocumentTemplater.Internals
             openXmlCompositeElement.RemoveAllChildren();
 
             if (start != null)
-            {
                 openXmlCompositeElement.AppendChild(start);
-            }
 
             openXmlCompositeElement.AppendChild(newChild);
 
             if (end != null)
-            {
                 openXmlCompositeElement.AppendChild(end);
-            }
         }
 
         /// <summary>
@@ -237,19 +210,13 @@ namespace BrandUp.DocumentTemplater.Internals
             openXmlCompositeElement.RemoveAllChildren();
 
             if (start != null)
-            {
                 openXmlCompositeElement.AppendChild(start);
-            }
 
             foreach (var newChild in newChildren)
-            {
                 openXmlCompositeElement.AppendChild(newChild);
-            }
 
             if (end != null)
-            {
                 openXmlCompositeElement.AppendChild(end);
-            }
         }
 
         /// <summary>
@@ -263,12 +230,10 @@ namespace BrandUp.DocumentTemplater.Internals
             Paragraph para = new();
             para.RemoveAllChildren();
 
-            foreach (Run run in runs)
-            {
+            foreach (var run in runs)
                 para.AppendChild(run);
-            }
 
-            cell.AppendChild<Paragraph>(para);
+            cell.AppendChild(para);
             SetSdtContentKeepingPermissionElements(sdtContentCell, cell);
         }
 
@@ -285,18 +250,14 @@ namespace BrandUp.DocumentTemplater.Internals
             if (paragraphProperties != null)
             {
                 para = new Paragraph(paragraphProperties.CloneNode(true));
-                foreach (Run run in runs)
-                {
-                    para.AppendChild<Run>(run);
-                }
+                foreach (var run in runs)
+                    para.AppendChild(run);
             }
             else
             {
                 para = new Paragraph();
-                foreach (Run run in runs)
-                {
-                    para.AppendChild<Run>(run);
-                }
+                foreach (var run in runs)
+                    para.AppendChild(run);
             }
             return para;
         }
@@ -313,13 +274,9 @@ namespace BrandUp.DocumentTemplater.Internals
 
             Run run;
             if (runProperties != null)
-            {
                 run = new Run(runProperties.CloneNode(true), new Text(content));
-            }
             else
-            {
                 run = new Run(new Text(content));
-            }
 
             return run;
         }

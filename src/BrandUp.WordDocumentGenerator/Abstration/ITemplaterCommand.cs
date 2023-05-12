@@ -5,7 +5,7 @@ namespace BrandUp.DocumentTemplater.Abstraction
     /// <summary>
     /// Коммада обрабатывающая контекст для записи в элемент управления
     /// </summary>
-    public interface IContextCommand
+    public interface ITemplaterCommand
     {
         /// <summary>
         /// Название комманды для использования в .docx файле.
