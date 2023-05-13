@@ -91,7 +91,9 @@ namespace BrandUp.DocumentTemplater
             }
             finally
             {
+#if DEBUG
                 Save(resultDocument, "Success_Foreach.docx");
+#endif
             }
 
             #endregion
@@ -136,7 +138,9 @@ namespace BrandUp.DocumentTemplater
             }
             finally
             {
+#if DEBUG
                 Save(resultDocument, "Success_Prop.docx");
+#endif
             }
 
             #endregion
@@ -270,7 +274,9 @@ namespace BrandUp.DocumentTemplater
             }
             finally
             {
+#if DEBUG
                 Save(resultDocument, "Success_Invoice.docx");
+#endif
             }
 
             #endregion
