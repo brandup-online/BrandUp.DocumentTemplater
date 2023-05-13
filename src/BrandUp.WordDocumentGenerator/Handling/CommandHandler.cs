@@ -6,7 +6,7 @@ namespace BrandUp.DocumentTemplater.Handling
 {
     internal static class CommandHandler
     {
-        readonly static IDictionary<string, IDocxCommand> commands = new Dictionary<string, IDocxCommand>();
+        readonly static IDictionary<string, ITemplaterCommand> commands = new Dictionary<string, ITemplaterCommand>();
 
         static CommandHandler()
         {
@@ -16,7 +16,12 @@ namespace BrandUp.DocumentTemplater.Handling
             AddHandler(new DateTimeNow());
         }
 
-        public static void AddHandler(IDocxCommand command)
+        /// <summary>
+        /// Добавляет обработчик команды
+        /// </summary>
+        /// <param name="command"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void AddHandler(ITemplaterCommand command)
         {
             if (!commands.TryAdd(command.Name.ToLower(), command))
             {
@@ -24,6 +29,15 @@ namespace BrandUp.DocumentTemplater.Handling
             }
         }
 
+        /// <summary>
+        /// Обрабатывает команду
+        /// </summary>
+        /// <param name="commandName">Название команды из шаблона</param>
+        /// <param name="properties">Параметры команды</param>
+        /// <param name="dataContext">Контекст данных</param>
+        /// <returns><see cref="HandleResult"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public static HandleResult Handle(string commandName, List<string> properties, object dataContext)
         {
             if (commandName == null)

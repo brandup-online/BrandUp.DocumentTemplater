@@ -4,24 +4,27 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets value to palceholder
+    ///  Устанивливает значение в соответствующий элемент управлнеие
     /// </summary>
-    internal class Prop : IDocxCommand
+    internal class Prop : ITemplaterCommand
     {
+        #region IContextCommand members
+
         public string Name => "prop";
-        public HandleResult Execute(List<string> properties, object dataContext)
+
+        public HandleResult Execute(List<string> parameters, object dataContext)
         {
             string output = null;
             object value;
-            if (properties.Count > 0)
-                value = dataContext.GetType().GetValueFromContext(properties[0], dataContext);
+            if (parameters.Count > 0)
+                value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext);
             else value = dataContext;
 
             if (value != null)
             {
-                if (properties.Count > 1 && !string.IsNullOrEmpty(properties[1]))
+                if (parameters.Count > 1 && !string.IsNullOrEmpty(parameters[1]))
                 {
-                    var format = properties[1];
+                    var format = parameters[1];
                     output = value.ToString(format);
                 }
                 else
@@ -30,5 +33,7 @@ namespace BrandUp.DocumentTemplater.Commands
 
             return new(value, output);
         }
+
+        #endregion
     }
 }

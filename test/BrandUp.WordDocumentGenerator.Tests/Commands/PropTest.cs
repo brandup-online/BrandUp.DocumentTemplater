@@ -2,20 +2,27 @@
 
 namespace BrandUp.DocumentTemplater.Commands
 {
-    public class PropTest : TestBase
+    public class PropTest
     {
+        /// <summary>
+        /// Значения всех поддерживаемых объектов. 
+        /// </summary>
         public static IEnumerable<object[]> TestContexts = new List<object[]>
         {
             new object[] { "String" },
             new object[] { new DateTime(2023,12, 22, 13, 55, 16) },
             new object[] { new TimeSpan(13, 55, 16) },
-            new object[] { 12},
+            new object[] { 12 },
             new object[] { 123123123123m },
             new object[] { 0.9200f },
             new object[] { double.MaxValue },
             new object[] { true }
         };
 
+        /// <summary>
+        /// Выполнение команды <see cref="Prop"/>, без параметров.
+        /// </summary>
+        /// <param name="context">Контекст данных</param>
         [Theory]
         [MemberData(nameof(TestContexts))]
         public void SuccessPatamtless(object context)
@@ -31,7 +38,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с одним параметром - имя свойства. Дата контекст - словарь
+        /// Выполнение команды <see cref="Prop"/> с одним параметром - имя свойства. Дата контекст - словарь
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>
@@ -67,7 +74,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с двумя парамтрами. Дата контекст словарь
+        /// Выполнение команды <see cref="Prop"/> с двумя парамтрами: имя свойства, формат. Дата контекст словарь
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>
@@ -108,7 +115,7 @@ namespace BrandUp.DocumentTemplater.Commands
         }
 
         /// <summary>
-        /// Выполнение команды Prop с двумя парамтрами. Дата контекст объект
+        /// Выполнение команды <see cref="Prop"/> с двумя парамтрами: имя свойства, формат. Дата контекст объект.
         /// </summary>
         /// <param name="key">Имя свойства</param>
         /// <param name="format">Формат</param>

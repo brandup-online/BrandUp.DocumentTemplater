@@ -5,7 +5,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace BrandUp.DocumentTemplater.Internals
 {
     /// <summary>
-    /// Helper class for OpenXml operations for document generation
+    /// Вспомогательный класс для работы с XML
     /// </summary>
     internal static class OpenXmlHelper
     {
@@ -14,34 +14,26 @@ namespace BrandUp.DocumentTemplater.Internals
         #region Public Methods
 
         /// <summary>
-        /// Gets the SDT content of content control.
+        /// Возвращает SDT элемент из элемента управление.
         /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
+        /// <param name="element">Элемент управление.</param>
+        /// <returns>SDT элемент</returns>
         public static OpenXmlCompositeElement GetSdtContentOfContentControl(SdtElement element)
         {
             if (element is SdtRun sdtRunELement)
-            {
                 return sdtRunELement.SdtContentRun;
-            }
             else if (element is SdtBlock sdtBlockElement)
-            {
                 return sdtBlockElement.SdtContentBlock;
-            }
             else if (element is SdtCell sdtCellElement)
-            {
                 return sdtCellElement.SdtContentCell;
-            }
             else if (element is SdtRow sdtRowElement)
-            {
                 return sdtRowElement.SdtContentRow;
-            }
 
             return null;
         }
 
         /// <summary>
-        /// Ensures the unique content control ids for main document part.
+        /// Гарантирует что у всех элементов управления есть уникальный id.
         /// </summary>
         /// <param name="mainDocumentPart">The main document part.</param>
         public static void EnsureUniqueContentControlIdsForMainDocumentPart(MainDocumentPart mainDocumentPart)
@@ -68,10 +60,10 @@ namespace BrandUp.DocumentTemplater.Internals
         }
 
         /// <summary>
-        /// Sets the unique content control ids.
+        /// Записывает уникальный id элемену управления
         /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="existingIds">The existing ids.</param>
+        /// <param name="element">Элемент.</param>
+        /// <param name="existingIds">Существующие ids.</param>
         public static void SetUniquecontentControlIds(OpenXmlCompositeElement element, List<int> existingIds)
         {
             foreach (SdtId sdtId in element.Descendants<SdtId>())
@@ -81,24 +73,20 @@ namespace BrandUp.DocumentTemplater.Internals
                     int randomId = rng.Next(int.MaxValue);
 
                     while (existingIds.Contains(randomId))
-                    {
                         rng.Next(int.MaxValue);
-                    }
 
                     sdtId.Val.Value = randomId;
                 }
                 else
-                {
                     existingIds.Add(sdtId.Val);
-                }
             }
         }
 
         /// <summary>
-        /// Sets the content of content control.
+        /// Записывает значение в элемент управления
         /// </summary>
-        /// <param name="contentControl">The content control.</param>
-        /// <param name="content">The content.</param>
+        /// <param name="contentControl">Элемент управления.</param>
+        /// <param name="content">Значение.</param>
         public static void SetContentOfContentControl(SdtElement contentControl, string content)
         {
             if (contentControl == null)
@@ -129,45 +117,35 @@ namespace BrandUp.DocumentTemplater.Internals
                         Run run = CreateRun(openXmlCompositeElement, textSplit);
 
                         if (addBreak)
-                        {
-                            run.AppendChild<Break>(new Break());
-                        }
+                            run.AppendChild(new Break());
 
                         if (!addBreak)
-                        {
                             addBreak = true;
-                        }
 
                         runs.Add(run);
                     }
                 }
                 else
-                {
                     runs.Add(CreateRun(openXmlCompositeElement, content));
-                }
 
                 if (openXmlCompositeElement is SdtContentCell)
-                {
                     AddRunsToSdtContentCell(openXmlCompositeElement as SdtContentCell, runs);
-                }
                 else if (openXmlCompositeElement is SdtContentBlock)
                 {
                     Paragraph para = CreateParagraph(openXmlCompositeElement, runs);
                     SetSdtContentKeepingPermissionElements(openXmlCompositeElement, para);
                 }
                 else
-                {
                     SetSdtContentKeepingPermissionElements(openXmlCompositeElement, runs);
-                }
             }
         }
 
         /// <summary>
-        /// Gets the tag.
+        /// Получает тег.
         /// </summary>
-        /// <param name="element">The SDT element.</param>
+        /// <param name="element">SDT элемент.</param>
         /// <returns>
-        /// Returns Tag of content control
+        /// Возвращает тег элемента управления
         /// </returns>
         public static Tag GetTag(SdtElement element)
         {
@@ -182,11 +160,11 @@ namespace BrandUp.DocumentTemplater.Internals
         #region Private Methods
 
         /// <summary>
-        /// Determines whether [is content control multiline] [the specified content control].
+        /// Определяет, является ли указанный элемент управления содержимым многострочным.
         /// </summary>
-        /// <param name="contentControl">The content control.</param>
+        /// <param name="contentControl">элемента управления содержимым</param>
         /// <returns>
-        ///   <c>true</c> if [is content control multiline] [the specified content control]; otherwise, <c>false</c>.
+        ///   <c>true</c>элемент управления содержимым многострочныЙ; иначе, <c>false</c>.
         /// </returns>
         private static bool IsContentControlMultiline(SdtElement contentControl)
         {
@@ -195,17 +173,16 @@ namespace BrandUp.DocumentTemplater.Internals
             bool isMultiline = false;
 
             if (contentText != null && contentText.MultiLine != null)
-            {
                 isMultiline = contentText.MultiLine.Value == true;
-            }
+
             return isMultiline;
         }
 
         /// <summary>
-        /// Sets the SDT content keeping permission elements.
+        /// Задает содержимое SDT, сохраняющее элементы разрешений.
         /// </summary>
-        /// <param name="openXmlCompositeElement">The open XML composite element.</param>
-        /// <param name="newChild">The new child.</param>
+        /// <param name="openXmlCompositeElement">Составной элемент Open XML.</param>
+        /// <param name="newChild">Новый потомок</param>
         private static void SetSdtContentKeepingPermissionElements(OpenXmlCompositeElement openXmlCompositeElement, OpenXmlElement newChild)
         {
             PermStart start = openXmlCompositeElement.Descendants<PermStart>().FirstOrDefault();
@@ -213,23 +190,19 @@ namespace BrandUp.DocumentTemplater.Internals
             openXmlCompositeElement.RemoveAllChildren();
 
             if (start != null)
-            {
                 openXmlCompositeElement.AppendChild(start);
-            }
 
             openXmlCompositeElement.AppendChild(newChild);
 
             if (end != null)
-            {
                 openXmlCompositeElement.AppendChild(end);
-            }
         }
 
         /// <summary>
-        /// Sets the SDT content keeping permission elements.
+        /// Задает содержимое SDT, сохраняющее элементы разрешений.
         /// </summary>
-        /// <param name="openXmlCompositeElement">The open XML composite element.</param>
-        /// <param name="newChildren">The new children.</param>
+        /// <param name="openXmlCompositeElement">Составной элемент Open XML.</param>
+        /// <param name="newChildren">Новый потомки</param>
         private static void SetSdtContentKeepingPermissionElements(OpenXmlCompositeElement openXmlCompositeElement, List<Run> newChildren)
         {
             PermStart start = openXmlCompositeElement.Descendants<PermStart>().FirstOrDefault();
@@ -237,25 +210,19 @@ namespace BrandUp.DocumentTemplater.Internals
             openXmlCompositeElement.RemoveAllChildren();
 
             if (start != null)
-            {
                 openXmlCompositeElement.AppendChild(start);
-            }
 
             foreach (var newChild in newChildren)
-            {
                 openXmlCompositeElement.AppendChild(newChild);
-            }
 
             if (end != null)
-            {
                 openXmlCompositeElement.AppendChild(end);
-            }
         }
 
         /// <summary>
-        /// Adds the runs to SDT content cell.
+        /// Добавляет runs в ячейку содержимого SDT.
         /// </summary>
-        /// <param name="sdtContentCell">The SDT content cell.</param>
+        /// <param name="sdtContentCell">содержание SDT ячейки.</param>
         /// <param name="runs">The runs.</param>
         private static void AddRunsToSdtContentCell(SdtContentCell sdtContentCell, List<Run> runs)
         {
@@ -263,19 +230,17 @@ namespace BrandUp.DocumentTemplater.Internals
             Paragraph para = new();
             para.RemoveAllChildren();
 
-            foreach (Run run in runs)
-            {
+            foreach (var run in runs)
                 para.AppendChild(run);
-            }
 
-            cell.AppendChild<Paragraph>(para);
+            cell.AppendChild(para);
             SetSdtContentKeepingPermissionElements(sdtContentCell, cell);
         }
 
         /// <summary>
-        /// Creates the paragraph.
+        /// Создает абзац.
         /// </summary>
-        /// <param name="openXmlCompositeElement">The open XML composite element.</param>
+        /// <param name="openXmlCompositeElement">open XML составной элемент.</param>
         /// <param name="runs">The runs.</param>
         /// <returns></returns>
         private static Paragraph CreateParagraph(OpenXmlCompositeElement openXmlCompositeElement, List<Run> runs)
@@ -285,24 +250,20 @@ namespace BrandUp.DocumentTemplater.Internals
             if (paragraphProperties != null)
             {
                 para = new Paragraph(paragraphProperties.CloneNode(true));
-                foreach (Run run in runs)
-                {
-                    para.AppendChild<Run>(run);
-                }
+                foreach (var run in runs)
+                    para.AppendChild(run);
             }
             else
             {
                 para = new Paragraph();
-                foreach (Run run in runs)
-                {
-                    para.AppendChild<Run>(run);
-                }
+                foreach (var run in runs)
+                    para.AppendChild(run);
             }
             return para;
         }
 
         /// <summary>
-        /// Creates the run.
+        /// Создает run
         /// </summary>
         /// <param name="openXmlCompositeElement">The open XML composite element.</param>
         /// <param name="content">The content.</param>
@@ -313,13 +274,9 @@ namespace BrandUp.DocumentTemplater.Internals
 
             Run run;
             if (runProperties != null)
-            {
                 run = new Run(runProperties.CloneNode(true), new Text(content));
-            }
             else
-            {
                 run = new Run(new Text(content));
-            }
 
             return run;
         }

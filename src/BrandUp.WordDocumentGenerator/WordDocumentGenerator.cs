@@ -13,15 +13,13 @@ namespace BrandUp.DocumentTemplater
     {
         readonly static Regex command = new(@"\{(?<command>\w+)\((?<params>.*)\)\}", RegexOptions.IgnoreCase);
 
-        internal static IDictionary<string, List<string>> testPropertyValues;
-
         /// <summary>
-        /// File processing .docx from the template by filling in the fields with data from the model.
+        /// Преобразует шаблон в .docx документ, записывая во все элементы управления соответствующие значения
         /// </summary>
-        /// <param name="dataContext">Object with data</param>
-        /// <param name="templateStream">Template</param>
-        /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns>The .docx file stream </returns>
+        /// <param name="dataContext">Контекст данных</param>
+        /// <param name="templateStream">Шаблон</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        /// <returns>.docx файл</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
@@ -30,46 +28,47 @@ namespace BrandUp.DocumentTemplater
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
 
-            testPropertyValues = new Dictionary<string, List<string>>();
-
-            // WordprocessingDocument changing incoming stream, so we copy data to output stream and changing it. 
+            // WordprocessingDocument изменяет поток, поэтому сначала создаем выходной поток. 
             var output = new MemoryStream();
             await templateStream.CopyToAsync(output, cancellationToken);
 
             using (var wordDocument = WordprocessingDocument.Open(output, true))
             {
-                await Task.Run(() =>
+                wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
+                MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
+                Document document = mainDocumentPart.Document;
+
+                foreach (HeaderPart part in mainDocumentPart.HeaderParts)
                 {
-                    wordDocument.ChangeDocumentType(WordprocessingDocumentType.Document);
-                    MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
-                    Document document = mainDocumentPart.Document;
+                    ProcessPlaceholder(new(part.Header, dataContext));
+                    part.Header.Save();
+                }
 
-                    foreach (HeaderPart part in mainDocumentPart.HeaderParts)
-                    {
-                        ProcessPlaceholder(new(part.Header, dataContext));
-                        part.Header.Save();
-                    }
+                cancellationToken.ThrowIfCancellationRequested();
 
-                    foreach (FooterPart part in mainDocumentPart.FooterParts)
-                    {
-                        ProcessPlaceholder(new(part.Footer, dataContext));
-                        part.Footer.Save();
-                    }
+                foreach (FooterPart part in mainDocumentPart.FooterParts)
+                {
+                    ProcessPlaceholder(new(part.Footer, dataContext));
+                    part.Footer.Save();
+                }
 
-                    ProcessPlaceholder(new(document, dataContext));
-                    OpenXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
-                    document.Save();
-                }, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                ProcessPlaceholder(new(document, dataContext));
+                OpenXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
+                document.Save();
             }
 
             output.Seek(0, SeekOrigin.Begin);
             return output;
         }
 
+        #region Helpers
+
         /// <summary>
-        /// Processes a placeholder node.
+        /// Обрабатывает заглушку
         /// </summary>
-        /// <param name="openXmlElementDataContext"></param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         static void ProcessPlaceholder(OpenXmlElementDataContext openXmlElementDataContext)
         {
             if (openXmlElementDataContext == null)
@@ -100,11 +99,6 @@ namespace BrandUp.DocumentTemplater
                     var result = CommandHandler.Handle(commandName, properties, openXmlElementDataContext.DataContext);
                     if (result.OutputType == CommandOutputType.Content)
                     {
-                        if (testPropertyValues.TryGetValue(tagValue, out var values))
-                            values.Add(result.OutputContent);
-                        else
-                            testPropertyValues.Add(tagValue, new() { result.OutputContent });
-
                         SetContentOfContentControl(openXmlElementDataContext.Element as SdtElement, result.OutputContent);
                     }
                     else if (result.OutputType == CommandOutputType.None)
@@ -133,9 +127,9 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Cloned element and set content in placeholders. 
+        /// Клонирует элемент и записывает данные 
         /// </summary>
-        /// <param name="openXmlElementDataContext"></param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NullReferenceException"></exception>
         static void CloneElementAndSetContentInPlaceholders(OpenXmlElementDataContext openXmlElementDataContext)
@@ -162,9 +156,9 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Populates the other open XML elements.
+        /// Заполняет другие открытые элементы XML.
         /// </summary>
-        /// <param name="openXmlElementDataContext">The open XML element data context.</param>
+        /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         static void PopulateOtherOpenXmlElements(OpenXmlElementDataContext openXmlElementDataContext)
         {
             if (openXmlElementDataContext.Element is OpenXmlCompositeElement && openXmlElementDataContext.Element.HasChildren)
@@ -180,15 +174,17 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Gets the tag value.
+        /// Получает значение тега.
         /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
+        /// <param name="element">Элемент.</param>
+        /// <returns>тег</returns>
         static string GetTagValue(SdtElement element)
         {
             Tag tag = OpenXmlHelper.GetTag(element);
 
             return (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
         }
+
+        #endregion
     }
 }

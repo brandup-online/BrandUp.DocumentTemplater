@@ -1,17 +1,16 @@
 ﻿using BrandUp.DocumentTemplater.Exeptions;
-using System.Collections;
 
 namespace BrandUp.DocumentTemplater
 {
-    public static class TypeExtension
+    internal static class TypeExtension
     {
         /// <summary>
-        /// Gets property value from data.
+        /// Возваращает данные из контектста
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="propName">name of property</param>
-        /// <param name="dataContext">Model with data</param>
-        /// <returns> Value by <c>propName</c></returns>
+        /// <param name="type">Тип данных</param>
+        /// <param name="propName">Имя свойства</param>
+        /// <param name="dataContext">Контекст данных</param>
+        /// <returns> Значение свойства <c>propName</c></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static object GetValueFromContext(this Type type, string propName, object dataContext)
         {
@@ -34,11 +33,6 @@ namespace BrandUp.DocumentTemplater
                     return string.Empty;
                 }
             }
-        }
-
-        public static bool IsContentType(this Type type)
-        {
-            return type.IsValueType || type == typeof(string) || type.IsAssignableTo(typeof(IEnumerable));
         }
     }
 }

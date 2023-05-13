@@ -4,17 +4,20 @@ using BrandUp.DocumentTemplater.Handling;
 namespace BrandUp.DocumentTemplater.Commands
 {
     /// <summary>
-    /// Sets collection as DataContext
+    /// Устанавливает коллекцию как контекст данных
     /// </summary>
-    internal class Foreach : IDocxCommand
+    internal class Foreach : ITemplaterCommand
     {
+        #region IContextCommand members
+
         public string Name => "foreach";
-        public HandleResult Execute(List<string> properties, object dataContext)
+
+        public HandleResult Execute(List<string> parameters, object dataContext)
         {
             var items = new List<object>();
             var value = dataContext;
-            if (properties.Count > 0)
-                value = value.GetType().GetValueFromContext(properties[0], value) ?? dataContext;
+            if (parameters.Count > 0)
+                value = value.GetType().GetValueFromContext(parameters[0], value) ?? dataContext;
 
             if (value is System.Collections.IEnumerable collection)
             {
@@ -24,5 +27,7 @@ namespace BrandUp.DocumentTemplater.Commands
 
             return new(dataContext, items);
         }
+
+        #endregion
     }
 }
