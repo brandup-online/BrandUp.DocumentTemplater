@@ -13,7 +13,7 @@ namespace BrandUp.DocumentTemplater.Commands
         {
             var items = new List<object>();
             var value = dataContext;
-            if (properties.Any())
+            if (properties.Count > 0)
                 value = value.GetType().GetValueFromContext(properties[0], value) ?? dataContext;
 
             if (value is System.Collections.IEnumerable collection)

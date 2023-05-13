@@ -8,7 +8,7 @@ namespace BrandUp.DocumentTemplater
         /// <summary>
         /// Determines whether <see cref="OpenXmlElement"> is content control (the specified open XML element data context).
         /// </summary>
-        /// <param name="openXmlElementDataContext">The open XML element data context.</param>
+        /// <param name="element">The open XML element data context.</param>
         /// <returns>
         /// <c>true</c> if <see cref="OpenXmlElement"> is content control (the specified open XML element data context); otherwise, <c>false</c>.
         /// </returns>

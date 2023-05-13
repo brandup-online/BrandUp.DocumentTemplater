@@ -73,16 +73,6 @@ namespace BrandUp.DocumentTemplater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] datetimenow {
-            get {
-                object obj = ResourceManager.GetObject("datetimenow", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] doc {
             get {
                 object obj = ResourceManager.GetObject("doc", resourceCulture);
@@ -106,26 +96,6 @@ namespace BrandUp.DocumentTemplater.Properties {
         internal static byte[] prop {
             get {
                 object obj = ResourceManager.GetObject("prop", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] setpropertycontext {
-            get {
-                object obj = ResourceManager.GetObject("setpropertycontext", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] test {
-            get {
-                object obj = ResourceManager.GetObject("test", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -13,7 +13,7 @@ namespace BrandUp.DocumentTemplater.Commands
         {
             string output = null;
             object value;
-            if (properties.Any())
+            if (properties.Count > 0)
                 value = dataContext.GetType().GetValueFromContext(properties[0], dataContext);
             else value = dataContext;
 

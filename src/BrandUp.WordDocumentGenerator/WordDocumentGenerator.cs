@@ -1,4 +1,5 @@
-﻿using BrandUp.DocumentTemplater.Handling;
+﻿using BrandUp.DocumentTemplater.Exeptions;
+using BrandUp.DocumentTemplater.Handling;
 using BrandUp.DocumentTemplater.Internals;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -25,7 +26,7 @@ namespace BrandUp.DocumentTemplater
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
             if (dataContext == null)
-                throw new ArgumentNullException(nameof(dataContext));
+                throw new DataContextNullException();
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
 

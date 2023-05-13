@@ -8,7 +8,7 @@ namespace BrandUp.DocumentTemplater.Commands
     /// </summary>
     internal class SetPropertyContext : IDocxCommand
     {
-        public string Name => "setcontextofproperty";
+        public string Name => "context";
         public HandleResult Execute(List<string> properties, object dataContext)
         {
             object value = dataContext.GetType().GetValueFromContext(properties[0], dataContext);

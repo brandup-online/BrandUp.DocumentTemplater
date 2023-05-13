@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BrandUp.DocumentTemplater.Exeptions;
+using System.Collections;
 
 namespace BrandUp.DocumentTemplater
 {
@@ -16,13 +17,15 @@ namespace BrandUp.DocumentTemplater
         {
             if (type.IsAssignableTo(typeof(IDictionary<string, object>)))
             {
-                return ((IDictionary<string, object>)dataContext)[propName];
+                if (!((IDictionary<string, object>)dataContext).TryGetValue(propName, out var value))
+                    throw new InvalidPropertyNameException(propName);
+                return value;
             }
             else
             {
                 try
                 {
-                    var p = type.GetProperty(propName) ?? throw new InvalidOperationException("Не найдено свойство " + propName + " у обхекта с типом " + type.FullName + ".");
+                    var p = type.GetProperty(propName) ?? throw new InvalidPropertyNameException(type, propName);
 
                     return p.GetValue(dataContext) ?? string.Empty;
                 }

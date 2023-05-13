@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml;
+﻿using BrandUp.DocumentTemplater.Exeptions;
+using DocumentFormat.OpenXml;
 
 namespace BrandUp.DocumentTemplater.Internals
 {
@@ -17,7 +18,7 @@ namespace BrandUp.DocumentTemplater.Internals
 
         public OpenXmlElementDataContext(OpenXmlElement element, object dataContext) : this(element)
         {
-            DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            DataContext = dataContext ?? throw new DataContextNullException();
         }
 
         public OpenXmlElementDataContext CloneTyped()

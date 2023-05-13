@@ -1,5 +1,6 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
 using BrandUp.DocumentTemplater.Commands;
+using BrandUp.DocumentTemplater.Exeptions;
 
 namespace BrandUp.DocumentTemplater.Handling
 {
@@ -30,11 +31,11 @@ namespace BrandUp.DocumentTemplater.Handling
             if (properties == null)
                 throw new ArgumentNullException(nameof(properties));
             if (dataContext == null)
-                throw new ArgumentNullException(nameof(dataContext));
+                throw new DataContextNullException();
 
             if (commands.TryGetValue(commandName.ToLower(), out var command))
                 return command.Execute(properties, dataContext);
-            else throw new ArgumentException("Wrong command", nameof(commandName));
+            else throw new InvalidCommandException(commandName);
         }
     }
 }
