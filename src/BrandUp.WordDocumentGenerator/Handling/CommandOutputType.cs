@@ -1,9 +1,9 @@
-﻿namespace BrandUp.DocxGenerator
+﻿namespace BrandUp.DocumentTemplater.Handling
 {
     /// <summary>
     /// Типы комманд.
     /// </summary>
-    public enum DocumentGeneratorCommandOutputType
+    public enum CommandOutputType
     {
         /// <summary>
         /// Комманда без выполнения действий в документе.
