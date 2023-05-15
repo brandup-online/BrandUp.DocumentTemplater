@@ -4,13 +4,10 @@ namespace BrandUp.DocumentTemplater.Commands
 {
     public class PropTest
     {
-        /// <summary>
-        /// Значения всех поддерживаемых объектов. 
-        /// </summary>
-        public static IEnumerable<object[]> TestContexts = new List<object[]>
+        private static readonly List<object[]> contexts = new()
         {
             new object[] { "String" },
-            new object[] { new DateTime(2023,12, 22, 13, 55, 16) },
+            new object[] { new DateTime(2023, 12, 22, 13, 55, 16) },
             new object[] { new TimeSpan(13, 55, 16) },
             new object[] { 12 },
             new object[] { 123123123123m },
@@ -18,6 +15,11 @@ namespace BrandUp.DocumentTemplater.Commands
             new object[] { double.MaxValue },
             new object[] { true }
         };
+
+        /// <summary>
+        /// Значения всех поддерживаемых объектов. 
+        /// </summary>
+        public static IEnumerable<object[]> TestContexts => contexts;
 
         /// <summary>
         /// Выполнение команды <see cref="Prop"/>, без параметров.

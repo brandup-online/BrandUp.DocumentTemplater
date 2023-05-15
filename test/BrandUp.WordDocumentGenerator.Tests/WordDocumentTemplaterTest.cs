@@ -2,6 +2,7 @@ using BrandUp.DocumentTemplater.Models;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BrandUp.DocumentTemplater
@@ -11,7 +12,7 @@ namespace BrandUp.DocumentTemplater
         const string TestDirectory = "../Test";
 
         /// <summary>
-        /// Попытка передать на вход устаревший формат файла
+        /// РџРѕРїС‹С‚РєР° РїРµСЂРµРґР°С‚СЊ РЅР° РІС…РѕРґ СѓСЃС‚Р°СЂРµРІС€РёР№ С„РѕСЂРјР°С‚ С„Р°Р№Р»Р°
         /// </summary>
         [Fact]
         public async void WrongFiles()
@@ -36,7 +37,7 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.List"/>
+        /// РџСЂРѕРІРµСЂРєР° Р»РѕРіРёРєРё РІС‹РїРѕР»РЅСЏРµРјРѕР№ РїСЂРё РєРѕРјР°РЅРґРµ <see cref="Handling.CommandOutputType.List"/>
         /// </summary>
         [Fact]
         public async void Success_Foreach()
@@ -70,24 +71,24 @@ namespace BrandUp.DocumentTemplater
             var elements = GetElementsFromResult(resultDocument);
             try
             {
-                var foreachElements = elements.Where(e => e.TagCommand.ToLower().Contains("foreach"));
-                Assert.Equal(7, foreachElements.Count()); // 4 для ObjList, 3 для IntArray
+                var foreachElements = elements.Where(it => it.Key.Contains("Foreach")).SelectMany(it => it.Value).ToList();
+                Assert.Equal(7, foreachElements.Count); // 4 РґР»СЏ ObjList, 3 РґР»СЏ IntArray
 
-                var o1Elements = elements.Where(e => e.TagCommand.ToLower() == "{prop(o1)}");
-                Assert.Equal(4, o1Elements.Count());
-                Assert.All(o1Elements, e => Assert.Equal(testObj.o1.ToString(), e.Value));
+                var o1Elements = elements["{prop(o1)}"];
+                Assert.Equal(4, o1Elements.Count);
+                Assert.All(o1Elements, e => Assert.Equal(testObj.o1.ToString(), e));
 
-                var o2Elements = elements.Where(e => e.TagCommand.ToLower() == "{prop(o2)}");
-                Assert.Equal(4, o2Elements.Count());
-                Assert.All(o2Elements, e => Assert.Equal(testObj.o2.ToString(), e.Value));
+                var o2Elements = elements["{prop(o2)}"];
+                Assert.Equal(4, o2Elements.Count);
+                Assert.All(o2Elements, e => Assert.Equal(testObj.o2.ToString(), e));
 
-                var o3Elements = elements.Where(e => e.TagCommand.ToLower() == "{prop(o3)}");
-                Assert.Equal(4, o3Elements.Count());
-                Assert.All(o3Elements, e => Assert.Equal(testObj.o3.ToString(), e.Value));
+                var o3Elements = elements["{prop(o3)}"];
+                Assert.Equal(4, o3Elements.Count);
+                Assert.All(o3Elements, e => Assert.Equal(testObj.o3.ToString(), e));
 
-                var intElements = elements.Where(e => e.TagCommand.ToLower() == "{prop()}"); // IntArray
-                Assert.Equal(3, intElements.Count());
-                Assert.True(intElements.Select(e => e.Value).SequenceEqual(obj.IntArray.Select(e => e.ToString())));
+                var intElements = elements["{prop()}"]; // IntArray
+                Assert.Equal(3, intElements.Count);
+                Assert.True(intElements.SequenceEqual(obj.IntArray.Select(e => e.ToString())));
             }
             finally
             {
@@ -100,7 +101,7 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.Content"/>
+        /// РџСЂРѕРІРµСЂРєР° Р»РѕРіРёРєРё РІС‹РїРѕР»РЅСЏРµРјРѕР№ РїСЂРё РєРѕРјР°РЅРґРµ <see cref="Handling.CommandOutputType.Content"/>
         /// </summary>
         [Fact]
         public async void Success_Prop()
@@ -125,16 +126,16 @@ namespace BrandUp.DocumentTemplater
             var elements = GetElementsFromResult(resultDocument);
             try
             {
-                Assert.Equal(8, elements.Count());
+                Assert.Equal(8, elements.Count);
                 Assert.Collection(elements,
-                    e => Assert.Equal(data.FullDate.ToString("dd-MM-yyyy hh-mm-ss"), e.Value), //Потому что даты зависят от культуры
-                    e => Assert.Equal("13:55.16", e.Value),
-                    e => Assert.Equal("12 градусов", e.Value),
-                    e => Assert.Equal("#123123123123#", e.Value),
-                    e => Assert.Equal(data.FloatValue.ToString("#.##"), e.Value),
-                    e => Assert.Equal(data.DoubleValue.ToString("0.0e+00"), e.Value),
-                    e => Assert.Equal("да", e.Value),
-                    e => Assert.Equal("Нет", e.Value));
+                    e => Assert.Equal(data.FullDate.ToString("dd-MM-yyyy hh-mm-ss"), e.Value.Single()), //РџРѕС‚РѕРјСѓ С‡С‚Рѕ РґР°С‚С‹ Р·Р°РІРёСЃСЏС‚ РѕС‚ РєСѓР»СЊС‚СѓСЂС‹
+                    e => Assert.Equal("13:55.16", e.Value.Single()),
+                    e => Assert.Equal("12 РіСЂР°РґСѓСЃРѕРІ", e.Value.Single()),
+                    e => Assert.Equal("#123123123123#", e.Value.Single()),
+                    e => Assert.Equal(data.FloatValue.ToString("#.##"), e.Value.Single()),
+                    e => Assert.Equal(data.DoubleValue.ToString("0.0e+00"), e.Value.Single()),
+                    e => Assert.Equal("РґР°", e.Value.Single()),
+                    e => Assert.Equal("РќРµС‚", e.Value.Single()));
             }
             finally
             {
@@ -147,7 +148,7 @@ namespace BrandUp.DocumentTemplater
         }
 
         /// <summary>
-        /// Проверка сложного шаблона
+        /// РџСЂРѕРІРµСЂРєР° СЃР»РѕР¶РЅРѕРіРѕ С€Р°Р±Р»РѕРЅР°
         /// </summary>
         [Fact]
         public async void Success_Invoice()
@@ -160,22 +161,22 @@ namespace BrandUp.DocumentTemplater
                 {
                     INN = "212341311",
                     KPP = "540601431",
-                    Name = "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"СЕНДЕР\"",
-                    Bank = "АО \"Тинькофф Банк\" МОСКВА",
+                    Name = "РћР‘Р©Р•РЎРўР’Рћ РЎ РћР“Р РђРќРР§Р•РќРќРћР™ РћРўР’Р•РўРЎРўР’Р•РќРќРћРЎРўР¬Р® \"РЎР•РќР”Р•Р \"",
+                    Bank = "РђРћ \"РўРёРЅСЊРєРѕС„С„ Р‘Р°РЅРє\" РњРћРЎРљР’Рђ",
                     BankAccount = "40702810016541028499",
                     BIC = "033549918",
                     CorrespondentAccount = "1020171514525555974",
-                    Address = "Новосибирская обл., г.о. город Новосибирск, г. Новосибирск, ул. Автодорожная, Зд. 15/3, ОФИС 102, 630132",
+                    Address = "РќРѕРІРѕСЃРёР±РёСЂСЃРєР°СЏ РѕР±Р»., Рі.Рѕ. РіРѕСЂРѕРґ РќРѕРІРѕСЃРёР±РёСЂСЃРє, Рі. РќРѕРІРѕСЃРёР±РёСЂСЃРє, СѓР». РђРІС‚РѕРґРѕСЂРѕР¶РЅР°СЏ, Р—Рґ. 15/3, РћР¤РРЎ 102, 630132",
                     Email = "it@email.ru",
                     Link = "https://sender.ru",
                     Phone = "8 (908) 223-55-12"
                 },
                 Counterparty = new()
                 {
-                    Name = "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"ЁЛКА ТРЕНД\"",
+                    Name = "РћР‘Р©Р•РЎРўР’Рћ РЎ РћР“Р РђРќРР§Р•РќРќРћР™ РћРўР’Р•РўРЎРўР’Р•РќРќРћРЎРўР¬Р® \"РЃР›РљРђ РўР Р•РќР”\"",
                     INN = "5401895257",
                     KPP = "540601121",
-                    Address = "Новосибирская обл., г.о. город Новосибирск, г. Новосибирск, ул. Железнодорожная, Зд. 15/2, ПОМЕЩ. 102, 630132"
+                    Address = "РќРѕРІРѕСЃРёР±РёСЂСЃРєР°СЏ РѕР±Р»., Рі.Рѕ. РіРѕСЂРѕРґ РќРѕРІРѕСЃРёР±РёСЂСЃРє, Рі. РќРѕРІРѕСЃРёР±РёСЂСЃРє, СѓР». Р–РµР»РµР·РЅРѕРґРѕСЂРѕР¶РЅР°СЏ, Р—Рґ. 15/2, РџРћРњР•Р©. 102, 630132"
                 },
                 Content = new InvoiceContent
                 {
@@ -184,7 +185,7 @@ namespace BrandUp.DocumentTemplater
                         new Product
                         {
                             Id = 1,
-                            Name = "Тариф \"Лёгкий старт\"",
+                            Name = "РўР°СЂРёС„ \"Р›С‘РіРєРёР№ СЃС‚Р°СЂС‚\"",
                             Quantity = 0,
                             Amount = 700,
                             Price = 700,
@@ -192,7 +193,7 @@ namespace BrandUp.DocumentTemplater
                         new Product
                         {
                             Id = 2,
-                            Name = "Тариф \"Професиональный\"",
+                            Name = "РўР°СЂРёС„ \"РџСЂРѕС„РµСЃРёРѕРЅР°Р»СЊРЅС‹Р№\"",
                             Quantity = 0,
                             Amount = 1500,
                             Price = 1500,
@@ -210,67 +211,67 @@ namespace BrandUp.DocumentTemplater
             var elements = GetElementsFromResult(resultDocument);
             try
             {
-                var tag = "{{prop({0})}}"; //Общий вид команды
+                var tag = "{{prop({0})}}"; //РћР±С‰РёР№ РІРёРґ РєРѕРјР°РЅРґС‹
 
-                var testDictionary = new Dictionary<string, List<string>>();
+                var testDictionary = new Dictionary<string, List<string>>(new TagComparer());
                 FillTestData(data, testDictionary);
 
-                var ids = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Id"), StringComparison.OrdinalIgnoreCase)).ToList();
+                var ids = elements[string.Format(tag, "Id")].ToList();
                 Assert.Equal(4, ids.Count);
-                Assert.True(ids.Select(e => e.Value).Distinct().SequenceEqual(testDictionary["Id"]));
+                Assert.True(ids.Distinct().SequenceEqual(testDictionary["Id"]));
 
-                var dates = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Date, \"dd.MM.yyyy\""), StringComparison.OrdinalIgnoreCase)).ToList();
+                var dates = elements[string.Format(tag, "Date, \"dd.MM.yyyy\"")].ToList();
                 Assert.Equal(2, dates.Count);
-                Assert.True(dates.Select(e => e.Value).Distinct().SequenceEqual(testDictionary["Date"]));
+                Assert.True(dates.Distinct().SequenceEqual(testDictionary["Date"]));
 
-                var INNs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "INN"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(INNs.Select(e => e.Value).SequenceEqual(testDictionary["INN"]));
+                var INNs = elements[string.Format(tag, "INN")].ToList();
+                Assert.True(INNs.SequenceEqual(testDictionary["INN"]));
 
-                var KPPs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "KPP"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(KPPs.Select(e => e.Value).SequenceEqual(testDictionary["KPP"]));
+                var KPPs = elements[string.Format(tag, "KPP")].ToList();
+                Assert.True(KPPs.SequenceEqual(testDictionary["KPP"]));
 
-                var Names = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Name"), StringComparison.OrdinalIgnoreCase)).ToList();
+                var Names = elements[string.Format(tag, "Name")].ToList();
                 Assert.Equal(4, Names.Count);
-                Assert.True(Names.Select(e => e.Value).SequenceEqual(testDictionary["Name"]));
+                Assert.True(Names.SequenceEqual(testDictionary["Name"]));
 
-                var Banks = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Bank"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Banks.Select(e => e.Value).SequenceEqual(testDictionary["Bank"]));
+                var Banks = elements[string.Format(tag, "Bank")].ToList();
+                Assert.True(Banks.SequenceEqual(testDictionary["Bank"]));
 
-                var BankAccounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "BankAccount"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(BankAccounts.Select(e => e.Value).SequenceEqual(testDictionary["BankAccount"]));
+                var BankAccounts = elements[string.Format(tag, "BankAccount")].ToList();
+                Assert.True(BankAccounts.SequenceEqual(testDictionary["BankAccount"]));
 
-                var BICs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "BIC"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(BICs.Select(e => e.Value).SequenceEqual(testDictionary["BIC"]));
+                var BICs = elements[string.Format(tag, "BIC")].ToList();
+                Assert.True(BICs.SequenceEqual(testDictionary["BIC"]));
 
-                var CorrespondentAccounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "CorrespondentAccount"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(CorrespondentAccounts.Select(e => e.Value).SequenceEqual(testDictionary["CorrespondentAccount"]));
+                var CorrespondentAccounts = elements[string.Format(tag, "CorrespondentAccount")].ToList();
+                Assert.True(CorrespondentAccounts.SequenceEqual(testDictionary["CorrespondentAccount"]));
 
-                var Addresses = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Address"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Addresses.Select(e => e.Value).SequenceEqual(testDictionary["Address"]));
+                var Addresses = elements[string.Format(tag, "Address")].ToList();
+                Assert.True(Addresses.SequenceEqual(testDictionary["Address"]));
 
-                var Emails = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Email"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Emails.Select(e => e.Value).SequenceEqual(testDictionary["Email"]));
+                var Emails = elements[string.Format(tag, "Email")].ToList();
+                Assert.True(Emails.SequenceEqual(testDictionary["Email"]));
 
-                var Links = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Link"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Links.Select(e => e.Value).SequenceEqual(testDictionary["Link"]));
+                var Links = elements[string.Format(tag, "Link")].ToList();
+                Assert.True(Links.SequenceEqual(testDictionary["Link"]));
 
-                var Phones = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Phone"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Phones.Select(e => e.Value).SequenceEqual(testDictionary["Phone"]));
+                var Phones = elements[string.Format(tag, "Phone")].ToList();
+                Assert.True(Phones.SequenceEqual(testDictionary["Phone"]));
 
-                var Quantitys = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Quantity"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Quantitys.Select(e => e.Value).SequenceEqual(testDictionary["Quantity"]));
+                var Quantitys = elements[string.Format(tag, "Quantity")].ToList();
+                Assert.True(Quantitys.SequenceEqual(testDictionary["Quantity"]));
 
-                var Amounts = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Amount"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Amounts.Select(e => e.Value).SequenceEqual(testDictionary["Amount"]));
+                var Amounts = elements[string.Format(tag, "Amount")].ToList();
+                Assert.True(Amounts.SequenceEqual(testDictionary["Amount"]));
 
-                var Prices = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Price"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Prices.Select(e => e.Value).SequenceEqual(testDictionary["Price"]));
+                var Prices = elements[string.Format(tag, "Price")].ToList();
+                Assert.True(Prices.SequenceEqual(testDictionary["Price"]));
 
-                var Taxs = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "Tax, \"##;##;без НДС\""), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(Taxs.Select(e => e.Value).SequenceEqual(new string[] { "без НДС" }));
+                var Taxs = elements[string.Format(tag, "Tax, \"##;##;Р±РµР· РќР”РЎ\"")].ToList();
+                Assert.True(Taxs.SequenceEqual(new string[] { "Р±РµР· РќР”РЎ" }));
 
-                var TotalSums = elements.Where(e => e.TagCommand.Equals(string.Format(tag, "TotalSum"), StringComparison.OrdinalIgnoreCase)).ToList();
-                Assert.True(TotalSums.Select(e => e.Value).SequenceEqual(testDictionary["TotalSum"]));
+                var TotalSums = elements[string.Format(tag, "TotalSum")].ToList();
+                Assert.True(TotalSums.SequenceEqual(testDictionary["TotalSum"]));
             }
             finally
             {
@@ -332,16 +333,28 @@ namespace BrandUp.DocumentTemplater
             data.CopyTo(output);
         }
 
-        static List<ResultData> GetElementsFromResult(Stream stream)
+        static IDictionary<string, List<string>> GetElementsFromResult(Stream stream)
         {
-            var dict = new List<ResultData>();
+            var dict = new Dictionary<string, List<string>>(new TagComparer());
             using (var wordDocument = WordprocessingDocument.Open(stream, false))
             {
-                dict = wordDocument.MainDocumentPart.Document.Body.Descendants<SdtElement>()
-                    .Where(it => it.SdtProperties.GetFirstChild<Tag>() != null).Select(it => new ResultData(it.SdtProperties.GetFirstChild<Tag>().Val.Value, it.InnerText)).ToList();
+                var elements = wordDocument.MainDocumentPart.Document.Body.Descendants<SdtElement>().Where(it => it.SdtProperties.GetFirstChild<Tag>() != null);
+                var tags = elements.Select(it => it.SdtProperties.GetFirstChild<Tag>().Val.Value).ToList();
+
+                foreach (var tag in tags)
+                {
+                    dict.TryAdd(tag, elements.Where(it => it.SdtProperties.GetFirstChild<Tag>().Val.Value == tag).Select(it => it.InnerText).ToList());
+                }
             }
 
             return dict;
+        }
+
+        class TagComparer : IEqualityComparer<string>
+        {
+            public bool Equals(string x, string y) => GetHashCode(x) == GetHashCode(y);
+
+            public int GetHashCode([DisallowNull] string obj) => obj.ToString().ToLower().GetHashCode();
         }
 
         #endregion
