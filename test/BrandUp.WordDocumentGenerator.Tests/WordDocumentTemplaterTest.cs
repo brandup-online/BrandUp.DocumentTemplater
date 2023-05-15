@@ -32,7 +32,7 @@ namespace BrandUp.DocumentTemplater
             using var template = new MemoryStream(Properties.Resources.doc);
             await Assert.ThrowsAsync<FileFormatException>(async () =>
             {
-                using var resultData = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
+                using var resultData = await WordDocumentTemplater.GenerateDocumentAsync(data, template, CancellationToken.None);
             });
         }
 
@@ -64,7 +64,7 @@ namespace BrandUp.DocumentTemplater
 
             };
             using var template = new MemoryStream(Properties.Resources._foreach);
-            using var resultDocument = await WordDocumentTemplater.GenerateDocument(obj, template, CancellationToken.None);
+            using var resultDocument = await WordDocumentTemplater.GenerateDocumentAsync(obj, template, CancellationToken.None);
 
             #region Asserts
 
@@ -119,7 +119,7 @@ namespace BrandUp.DocumentTemplater
             };
 
             using var template = new MemoryStream(Properties.Resources.prop);
-            using var resultDocument = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
+            using var resultDocument = await WordDocumentTemplater.GenerateDocumentAsync(data, template, CancellationToken.None);
 
             #region Asserts
 
@@ -204,7 +204,7 @@ namespace BrandUp.DocumentTemplater
                 }
             };
             using var template = new MemoryStream(Properties.Resources.Invoice);
-            using var resultDocument = await WordDocumentTemplater.GenerateDocument(data, template, CancellationToken.None);
+            using var resultDocument = await WordDocumentTemplater.GenerateDocumentAsync(data, template, CancellationToken.None);
 
             #region Assert
 

@@ -21,7 +21,8 @@ namespace BrandUp.DocumentTemplater
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns>.docx файл</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
+        /// <exception cref="ContextValueNullException"></exception>
+        public static async Task<Stream> GenerateDocumentAsync(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
             if (dataContext == null)
                 throw new ContextValueNullException();
