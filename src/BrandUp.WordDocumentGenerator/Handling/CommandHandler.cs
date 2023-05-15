@@ -45,7 +45,7 @@ namespace BrandUp.DocumentTemplater.Handling
             if (properties == null)
                 throw new ArgumentNullException(nameof(properties));
             if (dataContext == null)
-                throw new DataContextNullException();
+                throw new ContextValueNullException();
 
             if (commands.TryGetValue(commandName.ToLower(), out var command))
                 return command.Execute(properties, dataContext);

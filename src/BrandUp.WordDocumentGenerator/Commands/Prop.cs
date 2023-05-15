@@ -1,4 +1,5 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
+using BrandUp.DocumentTemplater.Exeptions;
 using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
@@ -14,22 +15,20 @@ namespace BrandUp.DocumentTemplater.Commands
 
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
-            string output = null;
+            string output;
             object value;
             if (parameters.Count > 0)
-                value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext);
-            else value = dataContext;
+                value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext) ?? throw new ContextValueNullException();
+            else value = dataContext ?? throw new ContextValueNullException();
 
-            if (value != null)
+            if (parameters.Count > 1 && !string.IsNullOrEmpty(parameters[1]))
             {
-                if (parameters.Count > 1 && !string.IsNullOrEmpty(parameters[1]))
-                {
-                    var format = parameters[1];
-                    output = value.ToString(format);
-                }
-                else
-                    output = value.ToString();
+                var format = parameters[1];
+                output = value.ToString(format);
             }
+            else
+                output = value.ToString();
+
 
             return new(value, output);
         }

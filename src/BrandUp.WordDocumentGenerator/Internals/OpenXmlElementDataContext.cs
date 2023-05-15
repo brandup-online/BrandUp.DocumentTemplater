@@ -24,7 +24,7 @@ namespace BrandUp.DocumentTemplater.Internals
 
         public OpenXmlElementDataContext(OpenXmlElement element, object dataContext) : this(element)
         {
-            DataContext = dataContext ?? throw new DataContextNullException();
+            DataContext = dataContext ?? throw new ContextValueNullException();
         }
 
         public OpenXmlElementDataContext CloneTyped()

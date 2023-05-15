@@ -22,16 +22,9 @@ namespace BrandUp.DocumentTemplater
             }
             else
             {
-                try
-                {
-                    var p = type.GetProperty(propName) ?? throw new InvalidPropertyNameException(type, propName);
+                var p = type.GetProperty(propName) ?? throw new InvalidPropertyNameException(type, propName);
 
-                    return p.GetValue(dataContext) ?? string.Empty;
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
+                return p.GetValue(dataContext) ?? throw new ContextValueNullException();
             }
         }
     }

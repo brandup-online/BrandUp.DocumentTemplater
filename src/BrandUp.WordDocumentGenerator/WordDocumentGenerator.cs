@@ -24,7 +24,7 @@ namespace BrandUp.DocumentTemplater
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
             if (dataContext == null)
-                throw new DataContextNullException();
+                throw new ContextValueNullException();
             if (templateStream == null)
                 throw new ArgumentNullException(nameof(templateStream));
 

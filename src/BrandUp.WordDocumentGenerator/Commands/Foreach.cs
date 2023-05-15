@@ -1,4 +1,5 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
+using BrandUp.DocumentTemplater.Exeptions;
 using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
@@ -15,9 +16,9 @@ namespace BrandUp.DocumentTemplater.Commands
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
             var items = new List<object>();
-            var value = dataContext;
+            var value = dataContext ?? throw new ContextValueNullException();
             if (parameters.Count > 0)
-                value = value.GetType().GetValueFromContext(parameters[0], value) ?? dataContext;
+                value = value.GetType().GetValueFromContext(parameters[0], dataContext) ?? throw new ContextValueNullException();
 
             if (value is System.Collections.IEnumerable collection)
             {
