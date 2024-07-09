@@ -17,7 +17,7 @@ variables:
 - name: buildConfiguration
   value: 'Release'
 - name: envName
-  value: 'BrandUp.DocumentTemplater'
+  value: 'brandup-document-templater'
 - name: version-major
   value: "1"
 - name: version-minor
