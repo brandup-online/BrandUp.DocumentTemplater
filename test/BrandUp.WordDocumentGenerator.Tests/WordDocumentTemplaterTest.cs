@@ -1,9 +1,9 @@
-using BrandUp.DocumentTemplater.Models;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using BrandUp.DocumentTemplater.Models;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace BrandUp.DocumentTemplater
 {
@@ -15,7 +15,7 @@ namespace BrandUp.DocumentTemplater
         /// Попытка передать на вход устаревший формат файла
         /// </summary>
         [Fact]
-        public async void WrongFiles()
+        public async Task WrongFiles()
         {
             var data = new TestObject
             {
@@ -40,7 +40,7 @@ namespace BrandUp.DocumentTemplater
         /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.List"/>
         /// </summary>
         [Fact]
-        public async void Success_Foreach()
+        public async Task Success_Foreach()
         {
             var testObj = new { o1 = 1, o2 = "abc", o3 = new DateTime(2022, 04, 20, 13, 55, 15) };
             var testList = new List<object>
@@ -104,7 +104,7 @@ namespace BrandUp.DocumentTemplater
         /// Проверка логики выполняемой при команде <see cref="Handling.CommandOutputType.Content"/>
         /// </summary>
         [Fact]
-        public async void Success_Prop()
+        public async Task Success_Prop()
         {
             var data = new
             {
@@ -151,7 +151,7 @@ namespace BrandUp.DocumentTemplater
         /// Проверка сложного шаблона
         /// </summary>
         [Fact]
-        public async void Success_Invoice()
+        public async Task Success_Invoice()
         {
             var data = new Invoice
             {
@@ -328,6 +328,9 @@ namespace BrandUp.DocumentTemplater
 
         static void Save(Stream data, string name)
         {
+            if (!Directory.Exists(TestDirectory))
+                Directory.CreateDirectory(TestDirectory);
+
             data.Seek(0, SeekOrigin.Begin);
             using var output = File.Create(Path.Combine(TestDirectory, name));
             data.CopyTo(output);

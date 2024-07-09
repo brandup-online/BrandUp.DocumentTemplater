@@ -1,11 +1,10 @@
-﻿using BrandUp.DocumentTemplater.Exeptions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using BrandUp.DocumentTemplater.Handling;
 using BrandUp.DocumentTemplater.Internals;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace BrandUp.DocumentTemplater
 {
@@ -23,10 +22,8 @@ namespace BrandUp.DocumentTemplater
         /// <exception cref="ArgumentNullException"></exception>
         public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
         {
-            if (dataContext == null)
-                throw new ContextValueNullException();
-            if (templateStream == null)
-                throw new ArgumentNullException(nameof(templateStream));
+            ArgumentNullException.ThrowIfNull(dataContext);
+            ArgumentNullException.ThrowIfNull(templateStream);
 
             // WordprocessingDocument изменяет поток, поэтому сначала создаем выходной поток. 
             var output = new MemoryStream();
@@ -71,8 +68,7 @@ namespace BrandUp.DocumentTemplater
         /// <param name="openXmlElementDataContext">Контекст данных элемента "open XML".</param>
         static void ProcessPlaceholder(OpenXmlElementDataContext openXmlElementDataContext)
         {
-            if (openXmlElementDataContext == null)
-                throw new ArgumentNullException(nameof(openXmlElementDataContext));
+            ArgumentNullException.ThrowIfNull(openXmlElementDataContext);
 
             if (openXmlElementDataContext.Element.IsContentControl())
             {
@@ -134,8 +130,7 @@ namespace BrandUp.DocumentTemplater
         /// <exception cref="NullReferenceException"></exception>
         static void CloneElementAndSetContentInPlaceholders(OpenXmlElementDataContext openXmlElementDataContext)
         {
-            if (openXmlElementDataContext == null)
-                throw new ArgumentNullException(nameof(openXmlElementDataContext));
+            ArgumentNullException.ThrowIfNull(openXmlElementDataContext);
 
             if (openXmlElementDataContext.Element == null)
                 throw new NullReferenceException(nameof(openXmlElementDataContext.Element));
