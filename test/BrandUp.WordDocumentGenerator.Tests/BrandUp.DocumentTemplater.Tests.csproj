@@ -26,7 +26,7 @@
     <EmbeddedResource Include="Resources\foreach.dotx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Invoice.dotx">
+    <EmbeddedResource Include="Resources\invoice.dotx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\prop.dotx">
