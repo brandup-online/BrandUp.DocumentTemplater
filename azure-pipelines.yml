@@ -19,9 +19,9 @@ variables:
 - name: envName
   value: 'brandup-document-templater'
 - name: version-major
-  value: "1"
+  value: "10"
 - name: version-minor
-  value: "1"
+  value: "0"
 
 name: $(version-major).$(version-minor).$(rev:r)
 
@@ -49,10 +49,10 @@ stages:
       persistCredentials: "true"
 
     - task: UseDotNet@2
-      displayName: 'use dotnet 9.x'
+      displayName: 'use dotnet 10.x'
       inputs:
         packageType: 'sdk'
-        version: '9.x'
+        version: '10.x'
         
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
