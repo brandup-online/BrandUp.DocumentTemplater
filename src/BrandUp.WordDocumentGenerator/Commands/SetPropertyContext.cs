@@ -9,10 +9,11 @@ namespace BrandUp.DocumentTemplater.Commands
     internal class SetPropertyContext : ITemplaterCommand
     {
         #region ITemplaterCommand members
+
         public string Name => "context";
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
-            object value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext);
+            object value = dataContext.GetPropertyValue(parameters[0]);
 
             return new(value);
         }

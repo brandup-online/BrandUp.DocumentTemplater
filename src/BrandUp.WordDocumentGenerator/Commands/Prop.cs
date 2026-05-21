@@ -18,8 +18,9 @@ namespace BrandUp.DocumentTemplater.Commands
             string output;
             object value;
             if (parameters.Count > 0)
-                value = dataContext.GetType().GetValueFromContext(parameters[0], dataContext) ?? throw new ContextValueNullException();
-            else value = dataContext ?? throw new ContextValueNullException();
+                value = dataContext.GetPropertyValue(parameters[0]) ?? throw new ContextValueNullException();
+            else
+                value = dataContext ?? throw new ContextValueNullException();
 
             if (parameters.Count > 1 && !string.IsNullOrEmpty(parameters[1]))
             {

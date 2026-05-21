@@ -24,9 +24,7 @@ namespace BrandUp.DocumentTemplater.Handling
         public static void AddHandler(ITemplaterCommand command)
         {
             if (!commands.TryAdd(command.Name.ToLower(), command))
-            {
                 throw new ArgumentException("Handler with this name already exist.", nameof(command));
-            }
         }
 
         /// <summary>
@@ -40,16 +38,15 @@ namespace BrandUp.DocumentTemplater.Handling
         /// <exception cref="ArgumentException"></exception>
         public static HandleResult Handle(string commandName, List<string> properties, object dataContext)
         {
-            if (commandName == null)
-                throw new ArgumentNullException(nameof(commandName));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(commandName);
+            ArgumentNullException.ThrowIfNull(properties);
             if (dataContext == null)
                 throw new ContextValueNullException();
 
             if (commands.TryGetValue(commandName.ToLower(), out var command))
                 return command.Execute(properties, dataContext);
-            else throw new InvalidCommandException(commandName);
+            else
+                throw new InvalidCommandException(commandName);
         }
     }
 }

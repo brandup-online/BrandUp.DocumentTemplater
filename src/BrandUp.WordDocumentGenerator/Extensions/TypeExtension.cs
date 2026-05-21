@@ -5,26 +5,36 @@ namespace BrandUp.DocumentTemplater
     internal static class TypeExtension
     {
         /// <summary>
-        /// Возваращает данные из контектста
+        /// Возваращает значение свойства объекта.
         /// </summary>
-        /// <param name="type">Тип данных</param>
+        /// <param name="obj">Объект.</param>
         /// <param name="propName">Имя свойства</param>
-        /// <param name="dataContext">Контекст данных</param>
-        /// <returns> Значение свойства <c>propName</c></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static object GetValueFromContext(this Type type, string propName, object dataContext)
+        /// <returns>Значение свойства <c>propName</c>.</returns>
+        /// <exception cref="InvalidPropertyNameException"></exception>
+        /// <exception cref="ContextValueNullException"></exception>
+        public static object GetPropertyValue(this object obj, string propName)
         {
+            ArgumentNullException.ThrowIfNull(obj);
+            ArgumentNullException.ThrowIfNull(propName);
+
+            var type = obj.GetType();
+
             if (type.IsAssignableTo(typeof(IDictionary<string, object>)))
             {
-                if (!((IDictionary<string, object>)dataContext).TryGetValue(propName, out var value))
+                if (!((IDictionary<string, object>)obj).TryGetValue(propName, out var value))
                     throw new InvalidPropertyNameException(propName);
                 return value;
             }
             else
             {
-                var p = type.GetProperty(propName) ?? throw new InvalidPropertyNameException(type, propName);
-
-                return p.GetValue(dataContext) ?? throw new ContextValueNullException();
+                var props = propName.Split('.');
+                object result = obj;
+                foreach (var prop in props)
+                {
+                    var property = result.GetType().GetProperty(prop) ?? throw new InvalidPropertyNameException(type, propName);
+                    result = property.GetValue(result) ?? throw new ContextValueNullException();
+                }
+                return result;
             }
         }
     }

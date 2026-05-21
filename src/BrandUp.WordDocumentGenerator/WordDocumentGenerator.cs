@@ -20,7 +20,7 @@ namespace BrandUp.DocumentTemplater
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns>.docx файл</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static async Task<Stream> GenerateDocument(object dataContext, Stream templateStream, CancellationToken cancellationToken)
+        public static async Task<Stream> GenerateDocumentAsync(object dataContext, Stream templateStream, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(dataContext);
             ArgumentNullException.ThrowIfNull(templateStream);
@@ -86,10 +86,9 @@ namespace BrandUp.DocumentTemplater
                     var properties = new List<string>();
                     if (!string.IsNullOrEmpty(commandParams))
                     {
-                        properties = commandParams
-                            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(it => it.Trim(new char[] { '"', ' ' }))
-                            .ToList();
+                        properties = [.. commandParams
+                            .Split([','], StringSplitOptions.RemoveEmptyEntries)
+                            .Select(it => it.Trim(['"', ' ']))];
                     }
 
                     var result = CommandHandler.Handle(commandName, properties, openXmlElementDataContext.DataContext);
@@ -158,7 +157,7 @@ namespace BrandUp.DocumentTemplater
         {
             if (openXmlElementDataContext.Element is OpenXmlCompositeElement && openXmlElementDataContext.Element.HasChildren)
             {
-                List<OpenXmlElement> elements = openXmlElementDataContext.Element.Elements().ToList();
+                List<OpenXmlElement> elements = [.. openXmlElementDataContext.Element.Elements()];
 
                 foreach (var element in elements)
                 {

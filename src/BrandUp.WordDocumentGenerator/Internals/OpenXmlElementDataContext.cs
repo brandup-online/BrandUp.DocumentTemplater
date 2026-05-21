@@ -6,21 +6,16 @@ namespace BrandUp.DocumentTemplater.Internals
     /// <summary>
     /// OpenXml элемент и связанный с ним контекст данных
     /// </summary>
-    internal class OpenXmlElementDataContext : ICloneable
+    internal class OpenXmlElementDataContext(OpenXmlElement element) : ICloneable
     {
         /// <summary>
         /// OpenXml элемент 
         /// </summary>
-        public OpenXmlElement Element { get; }
+        public OpenXmlElement Element { get; } = element ?? throw new ArgumentNullException(nameof(element));
         /// <summary>
         /// Контекст данных
         /// </summary>
         public object DataContext { get; }
-
-        public OpenXmlElementDataContext(OpenXmlElement element)
-        {
-            Element = element ?? throw new ArgumentNullException(nameof(element));
-        }
 
         public OpenXmlElementDataContext(OpenXmlElement element, object dataContext) : this(element)
         {

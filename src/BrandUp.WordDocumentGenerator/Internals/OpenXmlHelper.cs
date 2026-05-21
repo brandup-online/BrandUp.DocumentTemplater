@@ -38,7 +38,7 @@ namespace BrandUp.DocumentTemplater.Internals
         /// <param name="mainDocumentPart">The main document part.</param>
         public static void EnsureUniqueContentControlIdsForMainDocumentPart(MainDocumentPart mainDocumentPart)
         {
-            List<int> contentControlIds = new();
+            List<int> contentControlIds = [];
 
             if (mainDocumentPart != null)
             {
@@ -89,8 +89,7 @@ namespace BrandUp.DocumentTemplater.Internals
         /// <param name="content">Значение.</param>
         public static void SetContentOfContentControl(SdtElement contentControl, string content)
         {
-            if (contentControl == null)
-                throw new ArgumentNullException(nameof(contentControl));
+            ArgumentNullException.ThrowIfNull(contentControl);
 
             content = string.IsNullOrEmpty(content) ? string.Empty : content;
             bool isCombobox = contentControl.SdtProperties.Descendants<SdtContentDropDownList>().FirstOrDefault() != null;
@@ -105,11 +104,11 @@ namespace BrandUp.DocumentTemplater.Internals
             {
                 OpenXmlCompositeElement openXmlCompositeElement = GetSdtContentOfContentControl(contentControl);
                 contentControl.SdtProperties.RemoveAllChildren<ShowingPlaceholder>();
-                List<Run> runs = new();
+                List<Run> runs = [];
 
                 if (IsContentControlMultiline(contentControl))
                 {
-                    List<string> textSplitted = content.Split(Environment.NewLine.ToCharArray()).ToList();
+                    List<string> textSplitted = [.. content.Split(Environment.NewLine.ToCharArray())];
                     bool addBreak = false;
 
                     foreach (string textSplit in textSplitted)
@@ -149,8 +148,7 @@ namespace BrandUp.DocumentTemplater.Internals
         /// </returns>
         public static Tag GetTag(SdtElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            ArgumentNullException.ThrowIfNull(element);
 
             return element.SdtProperties.Elements<Tag>().FirstOrDefault();
         }

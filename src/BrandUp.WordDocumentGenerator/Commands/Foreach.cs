@@ -18,7 +18,7 @@ namespace BrandUp.DocumentTemplater.Commands
             var items = new List<object>();
             var value = dataContext ?? throw new ContextValueNullException();
             if (parameters.Count > 0)
-                value = value.GetType().GetValueFromContext(parameters[0], dataContext) ?? throw new ContextValueNullException();
+                value = value.GetPropertyValue(parameters[0]) ?? throw new ContextValueNullException();
 
             if (value is System.Collections.IEnumerable collection)
             {
