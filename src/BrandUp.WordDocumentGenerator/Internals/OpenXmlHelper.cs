@@ -9,8 +9,6 @@ namespace BrandUp.DocumentTemplater.Internals
     /// </summary>
     internal static class OpenXmlHelper
     {
-        readonly static Random rng = new();
-
         #region Public Methods
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace BrandUp.DocumentTemplater.Internals
         /// <param name="mainDocumentPart">The main document part.</param>
         public static void EnsureUniqueContentControlIdsForMainDocumentPart(MainDocumentPart mainDocumentPart)
         {
-            List<int> contentControlIds = [];
+            HashSet<int> contentControlIds = [];
 
             if (mainDocumentPart != null)
             {
@@ -64,21 +62,21 @@ namespace BrandUp.DocumentTemplater.Internals
         /// </summary>
         /// <param name="element">Элемент.</param>
         /// <param name="existingIds">Существующие ids.</param>
-        public static void SetUniquecontentControlIds(OpenXmlCompositeElement element, List<int> existingIds)
+        public static void SetUniquecontentControlIds(OpenXmlCompositeElement element, HashSet<int> existingIds)
         {
             foreach (SdtId sdtId in element.Descendants<SdtId>())
             {
-                if (existingIds.Contains(sdtId.Val))
-                {
-                    int randomId = rng.Next(int.MaxValue);
+                if (sdtId.Val == null)
+                    continue;
 
-                    while (existingIds.Contains(randomId))
-                        rng.Next(int.MaxValue);
+                if (!existingIds.Add(sdtId.Val))
+                {
+                    int randomId;
+                    do { randomId = Random.Shared.Next(int.MaxValue); }
+                    while (!existingIds.Add(randomId));
 
                     sdtId.Val.Value = randomId;
                 }
-                else
-                    existingIds.Add(sdtId.Val);
             }
         }
 

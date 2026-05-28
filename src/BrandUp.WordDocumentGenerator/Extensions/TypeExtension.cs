@@ -1,4 +1,4 @@
-﻿using BrandUp.DocumentTemplater.Exeptions;
+﻿using BrandUp.DocumentTemplater.Exceptions;
 
 namespace BrandUp.DocumentTemplater
 {

@@ -1,4 +1,5 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
+using BrandUp.DocumentTemplater.Exceptions;
 using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
@@ -13,7 +14,12 @@ namespace BrandUp.DocumentTemplater.Commands
         public string Name => "context";
         public HandleResult Execute(List<string> parameters, object dataContext)
         {
-            object value = dataContext.GetPropertyValue(parameters[0]);
+            if (dataContext == null)
+                throw new ContextValueNullException();
+            if (parameters.Count == 0)
+                throw new ArgumentException("Команда 'context' требует имя свойства.", nameof(parameters));
+
+            object value = dataContext.GetPropertyValue(parameters[0]) ?? throw new ContextValueNullException();
 
             return new(value);
         }

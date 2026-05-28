@@ -1,5 +1,5 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
-using BrandUp.DocumentTemplater.Exeptions;
+using BrandUp.DocumentTemplater.Exceptions;
 using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands

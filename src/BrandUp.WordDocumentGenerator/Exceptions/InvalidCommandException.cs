@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocumentTemplater.Exeptions
+﻿namespace BrandUp.DocumentTemplater.Exceptions
 {
     internal class InvalidCommandException : Exception
     {

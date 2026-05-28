@@ -1,4 +1,4 @@
-﻿using BrandUp.DocumentTemplater.Exeptions;
+﻿using BrandUp.DocumentTemplater.Exceptions;
 using DocumentFormat.OpenXml;
 
 namespace BrandUp.DocumentTemplater.Internals
@@ -6,10 +6,10 @@ namespace BrandUp.DocumentTemplater.Internals
     /// <summary>
     /// OpenXml элемент и связанный с ним контекст данных
     /// </summary>
-    internal class OpenXmlElementDataContext(OpenXmlElement element) : ICloneable
+    internal class OpenXmlElementDataContext(OpenXmlElement element)
     {
         /// <summary>
-        /// OpenXml элемент 
+        /// OpenXml элемент
         /// </summary>
         public OpenXmlElement Element { get; } = element ?? throw new ArgumentNullException(nameof(element));
         /// <summary>
@@ -21,20 +21,5 @@ namespace BrandUp.DocumentTemplater.Internals
         {
             DataContext = dataContext ?? throw new ContextValueNullException();
         }
-
-        public OpenXmlElementDataContext CloneTyped()
-        {
-            return (OpenXmlElementDataContext)Clone();
-        }
-
-        #region ICloneable members
-
-        public object Clone()
-        {
-            OpenXmlElementDataContext ret = new(Element, DataContext);
-            return ret;
-        }
-
-        #endregion
     }
 }

@@ -2,8 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Authors>Dmitry Shashev</Authors>
-		<Authors>Dmitry Kovyazin</Authors>
+		<Authors>Dmitry Shashev, Dmitry Kovyazin</Authors>
 		<Company>BrandUp.online</Company>
 		<Product>BrandUp.DocumentTemplater</Product>
 		<RepositoryUrl>https://github.com/brandup-online/BrandUp.DocumentTemplater</RepositoryUrl>

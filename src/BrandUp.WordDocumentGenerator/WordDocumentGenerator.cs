@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using BrandUp.DocumentTemplater.Handling;
 using BrandUp.DocumentTemplater.Internals;
@@ -36,24 +37,20 @@ namespace BrandUp.DocumentTemplater
                 Document document = mainDocumentPart.Document;
 
                 foreach (HeaderPart part in mainDocumentPart.HeaderParts)
-                {
                     ProcessPlaceholder(new(part.Header, dataContext));
-                    part.Header.Save();
-                }
 
                 cancellationToken.ThrowIfCancellationRequested();
 
                 foreach (FooterPart part in mainDocumentPart.FooterParts)
-                {
                     ProcessPlaceholder(new(part.Footer, dataContext));
-                    part.Footer.Save();
-                }
 
                 cancellationToken.ThrowIfCancellationRequested();
 
                 ProcessPlaceholder(new(document, dataContext));
+
+                // Сохранение всех частей выполняется здесь: метод проставляет
+                // уникальные id и вызывает Save() для header/footer/документа.
                 OpenXmlHelper.EnsureUniqueContentControlIdsForMainDocumentPart(mainDocumentPart);
-                document.Save();
             }
 
             output.Seek(0, SeekOrigin.Begin);
@@ -61,6 +58,57 @@ namespace BrandUp.DocumentTemplater
         }
 
         #region Helpers
+
+        /// <summary>
+        /// Разбирает строку параметров команды на отдельные значения.
+        /// Запятые внутри кавычек (' или ") не считаются разделителями,
+        /// что позволяет использовать форматы вроде "#,##0.00".
+        /// </summary>
+        /// <param name="raw">Содержимое скобок команды.</param>
+        /// <returns>Список параметров без обрамляющих кавычек и пробелов.</returns>
+        internal static List<string> ParseParameters(string raw)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(raw))
+                return result;
+
+            var current = new StringBuilder();
+            char quote = '\0';
+            bool inQuotes = false;
+
+            foreach (char c in raw)
+            {
+                if (inQuotes)
+                {
+                    if (c == quote)
+                        inQuotes = false;
+                    else
+                        current.Append(c);
+                }
+                else if (c == '"' || c == '\'')
+                {
+                    inQuotes = true;
+                    quote = c;
+                }
+                else if (c == ',')
+                {
+                    AddParameter(result, current);
+                    current.Clear();
+                }
+                else
+                    current.Append(c);
+            }
+
+            AddParameter(result, current);
+            return result;
+        }
+
+        static void AddParameter(List<string> result, StringBuilder builder)
+        {
+            var value = builder.ToString().Trim();
+            if (value.Length > 0)
+                result.Add(value);
+        }
 
         /// <summary>
         /// Обрабатывает заглушку
@@ -83,13 +131,7 @@ namespace BrandUp.DocumentTemplater
                     var commandName = match.Groups["command"].Value;
                     var commandParams = match.Groups["params"].Value;
 
-                    var properties = new List<string>();
-                    if (!string.IsNullOrEmpty(commandParams))
-                    {
-                        properties = [.. commandParams
-                            .Split([','], StringSplitOptions.RemoveEmptyEntries)
-                            .Select(it => it.Trim(['"', ' ']))];
-                    }
+                    var properties = ParseParameters(commandParams);
 
                     var result = CommandHandler.Handle(commandName, properties, openXmlElementDataContext.DataContext);
                     if (result.OutputType == CommandOutputType.Content)
@@ -112,7 +154,7 @@ namespace BrandUp.DocumentTemplater
                 }
             }
             else
-                PopulateOtherOpenXmlElements(openXmlElementDataContext.CloneTyped());
+                PopulateOtherOpenXmlElements(openXmlElementDataContext);
         }
 
         static void SetContentOfContentControl(SdtElement element, string content)
@@ -176,7 +218,7 @@ namespace BrandUp.DocumentTemplater
         {
             Tag tag = OpenXmlHelper.GetTag(element);
 
-            return (tag == null || (tag.Val.HasValue == false)) ? string.Empty : tag.Val.Value;
+            return (tag?.Val == null || !tag.Val.HasValue) ? string.Empty : tag.Val.Value;
         }
 
         #endregion

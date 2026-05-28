@@ -13,19 +13,7 @@
             if (string.IsNullOrEmpty(format))
                 return value.ToString();
 
-            if (value is DateTime time)
-                return time.ToString(format);
-            else if (value is TimeSpan span)
-                return span.ToString(format);
-            else if (value is decimal @decimal)
-                return @decimal.ToString(format);
-            else if (value is double @double)
-                return @double.ToString(format);
-            else if (value is float single)
-                return single.ToString(format);
-            else if (value is int @int)
-                return @int.ToString(format);
-            else if (value is bool boolean)
+            if (value is bool boolean)
             {
                 if (format == "b")
                     return boolean ? "да" : "нет";
@@ -34,8 +22,13 @@
                 else
                     return value.ToString();
             }
-            else
-                return string.Format(format, value);
+
+            // Покрывает все числовые типы (int, long, short, decimal, double, float, …),
+            // а также DateTime, TimeSpan, Guid и прочие IFormattable.
+            if (value is IFormattable formattable)
+                return formattable.ToString(format, null);
+
+            return string.Format(format, value);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace BrandUp.DocumentTemplater.Exeptions
+﻿namespace BrandUp.DocumentTemplater.Exceptions
 {
     public class ContextValueNullException : Exception
     {

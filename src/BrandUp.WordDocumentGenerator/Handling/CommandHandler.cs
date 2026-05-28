@@ -1,12 +1,12 @@
 ﻿using BrandUp.DocumentTemplater.Abstraction;
 using BrandUp.DocumentTemplater.Commands;
-using BrandUp.DocumentTemplater.Exeptions;
+using BrandUp.DocumentTemplater.Exceptions;
 
 namespace BrandUp.DocumentTemplater.Handling
 {
     internal static class CommandHandler
     {
-        readonly static IDictionary<string, ITemplaterCommand> commands = new Dictionary<string, ITemplaterCommand>();
+        readonly static IDictionary<string, ITemplaterCommand> commands = new Dictionary<string, ITemplaterCommand>(StringComparer.OrdinalIgnoreCase);
 
         static CommandHandler()
         {
@@ -23,7 +23,7 @@ namespace BrandUp.DocumentTemplater.Handling
         /// <exception cref="ArgumentException"></exception>
         public static void AddHandler(ITemplaterCommand command)
         {
-            if (!commands.TryAdd(command.Name.ToLower(), command))
+            if (!commands.TryAdd(command.Name, command))
                 throw new ArgumentException("Handler with this name already exist.", nameof(command));
         }
 
@@ -43,7 +43,7 @@ namespace BrandUp.DocumentTemplater.Handling
             if (dataContext == null)
                 throw new ContextValueNullException();
 
-            if (commands.TryGetValue(commandName.ToLower(), out var command))
+            if (commands.TryGetValue(commandName, out var command))
                 return command.Execute(properties, dataContext);
             else
                 throw new InvalidCommandException(commandName);
