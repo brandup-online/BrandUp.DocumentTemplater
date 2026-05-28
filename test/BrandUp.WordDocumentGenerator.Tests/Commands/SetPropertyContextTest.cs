@@ -1,9 +1,39 @@
-﻿using BrandUp.DocumentTemplater.Handling;
+﻿using BrandUp.DocumentTemplater.Exceptions;
+using BrandUp.DocumentTemplater.Handling;
 
 namespace BrandUp.DocumentTemplater.Commands
 {
     public class SetPropertyContextTest
     {
+        [Fact]
+        public void EmptyParameters_Throws()
+        {
+            var command = new SetPropertyContext();
+
+            Assert.Throws<ArgumentException>(() => command.Execute(new(), new { X = 1 }));
+        }
+
+        [Fact]
+        public void NullDataContext_Throws()
+        {
+            var command = new SetPropertyContext();
+
+            Assert.Throws<ContextValueNullException>(() => command.Execute(new() { "X" }, null));
+        }
+
+        /// <summary>
+        /// null-значение, полученное из словаря, должно превращаться
+        /// в ContextValueNullException (новый guard в Execute).
+        /// </summary>
+        [Fact]
+        public void NullPropertyValue_Throws()
+        {
+            var command = new SetPropertyContext();
+            var data = new Dictionary<string, object> { ["X"] = null };
+
+            Assert.Throws<ContextValueNullException>(() => command.Execute(new() { "X" }, data));
+        }
+
         /// <summary>
         /// Тест команды <see cref="SetPropertyContext"/> с параметром контекста "Top". Контекст данных, объект.
         /// </summary>

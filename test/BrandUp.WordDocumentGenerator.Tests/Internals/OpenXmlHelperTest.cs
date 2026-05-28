@@ -42,6 +42,25 @@ namespace BrandUp.DocumentTemplater.Internals
             Assert.Equal(new[] { 1, 2, 3 }, ids);
         }
 
+        /// <summary>
+        /// Элементы управления без заданного id (Val == null) пропускаются
+        /// без исключений и не влияют на уже занятые id.
+        /// </summary>
+        [Fact]
+        public void SetUniqueContentControlIds_SkipsNullVal()
+        {
+            var withNull = new SdtBlock(new SdtProperties(new SdtId()));
+            var withValue = NewSdtBlock(5);
+            var body = new Body(withNull, withValue);
+
+            var exception = Record.Exception(() => OpenXmlHelper.SetUniquecontentControlIds(body, []));
+
+            Assert.Null(exception);
+            var ids = body.Descendants<SdtId>().ToList();
+            Assert.Null(ids[0].Val);
+            Assert.Equal(5, ids[1].Val.Value);
+        }
+
         static SdtBlock NewSdtBlock(int id)
             => new(new SdtProperties(new SdtId { Val = id }));
     }
