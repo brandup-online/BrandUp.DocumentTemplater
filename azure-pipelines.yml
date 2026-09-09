@@ -73,19 +73,34 @@ stages:
       inputs:
         command: test
         projects: $(test-projects)
-        arguments: --configuration $(buildConfiguration) --collect "Code coverage"
-        failTaskOnFailedTests: true
-        publishTestResults: true
-        testRunTitle: "solution tests"
+        arguments: >
+          --configuration $(buildConfiguration) --no-build --no-restore
+          --results-directory $(Agent.TempDirectory)/TestResults
+          --report-trx
+          --coverage --coverage-output-format cobertura
+        publishTestResults: false
 
     - task: PublishTestResults@2
-      enabled: "false"
-      displayName: 'publish test/coverage results'
+      displayName: 'publish test results'
       condition: succeededOrFailed()
       inputs:
-        testRunner: VSTest
-        testResultsFiles: '$(Agent.TempDirectory)/**/*.trx'
-        
+        testResultsFormat: VSTest
+        testResultsFiles: '*.trx'
+        searchFolder: $(Agent.TempDirectory)/TestResults
+        testRunTitle: "solution tests"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+
+    # Only the top level: the same reports are duplicated under In/<machine>/, and a ** pattern would
+    # count every file twice.
+    - task: PublishCodeCoverageResults@2
+      displayName: 'publish code coverage'
+      condition: succeededOrFailed()
+      inputs:
+        summaryFileLocation: '$(Agent.TempDirectory)/TestResults/*.cobertura.xml'
+        pathToSources: $(Build.SourcesDirectory)
+        failIfCoverageEmpty: true
+
     - task: DotNetCoreCLI@2
       displayName: "dotnet pack"
       inputs:
