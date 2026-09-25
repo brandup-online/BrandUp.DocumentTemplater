@@ -1,0 +1,23 @@
+<Project>
+
+	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+
+	<!-- Shared NuGet package metadata for the library projects under src -->
+	<PropertyGroup>
+		<Authors>Dmitry Shashev, Dmitry Kovyazin</Authors>
+		<Company>BrandUp.online</Company>
+		<Product>BrandUp.DocumentTemplater</Product>
+		<RepositoryUrl>https://github.com/brandup-online/BrandUp.DocumentTemplater</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/brandup-online/BrandUp.DocumentTemplater</PackageProjectUrl>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageIcon>icon.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>
